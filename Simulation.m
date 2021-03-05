@@ -77,8 +77,9 @@ sensor.mask(x_offset, (Ny/2 - width/2 + 1:Ny/2 + width/2)) = 1;
 sensor.mask(x_offset, ((Ny/2)-10):((Ny/2)+10)) = 0;
 
 %% run the simulation
-input_args = {'RecordMovie', true, 'MovieName', 'example_movie'};
-sensor_data = kspaceFirstOrder2D(kgrid, medium, source, sensor, input_args{:});
+%input_args = {'RecordMovie', true, 'MovieName', 'example_movie'};
+%sensor_data = kspaceFirstOrder2D(kgrid, medium, source, sensor, input_args{:});
+sensor_data = kspaceFirstOrder2D(kgrid, medium, source, sensor);
 
 sensor_left = sensor_data(1:14,:);
 sensor_right = sensor_data(15:29,:);
@@ -119,8 +120,11 @@ paint_buffer(end_arrow_left(1),end_arrow_left(2)) = 1;
 paint_buffer(end_arrow_right(1),end_arrow_right(2)) = 1;
 
 %% fast fourier transform
-Y = fft(sensor_left(7,:));
-L = length(sensor_left(7,:));
+startSin = find(sensor_left(7,:)>0.1)
+startSin = startSin(1)
+
+Y = fft(sensor_left(7,startSin:end));
+L = length(sensor_left(7,startSin:end));
 P2 = abs(Y/L);
 P1 = P2(1:L/2+1);
 P1(2:end-1) = 2*P1(2:end-1);
@@ -130,19 +134,8 @@ P4 = angle(Y)
 P3 = P4(1:L/2+1);
 index = find(P1==max(P1))
 
-for i = 1:nmics
-   Y_b = fft(sensor_left(i,:));
-   L_b = length(sensor_left(i,:));
-   P2_b = abs(Y_b/L_b);
-   P1_b = P2_b(1:L_b/2+1);
-   P1_b(2:end-1) = 2*P1_b(2:end-1);
-   
-   P4_b = angle(Y_b)
-   P3_b = P4_b(1:L_b/2+1);
-   index = find(P1_b==max(P1_b))
-   
-   a_delay_left(i) = P3_b(index)
-end
+a_left = delayCalculation(sensor_left)
+a_right = delayCalculation(sensor_right)
 
 %% =========================================================================
 % VISUALISATION

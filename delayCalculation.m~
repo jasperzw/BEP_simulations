@@ -1,0 +1,18 @@
+function [a] = delayCalculation(sensor_input)
+%DELAYCALCULATION calculates fourier delay
+%
+for i = 1:nmics
+   Y_b = fft(sensor_left(i,:));
+   L_b = length(sensor_left(i,:));
+   P2_b = abs(Y_b/L_b);
+   P1_b = P2_b(1:L_b/2+1);
+   P1_b(2:end-1) = 2*P1_b(2:end-1);
+   
+   P4_b = angle(Y_b)
+   P3_b = P4_b(1:L_b/2+1);
+   index = find(P1_b==max(P1_b))
+   
+   a_delay_left(i) = P3_b(index)
+end
+end
+
