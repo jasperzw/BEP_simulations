@@ -26,7 +26,7 @@
 % 
 % You should have received a copy of the GNU Lesser General Public License
 % along with k-Wave. If not, see <http://www.gnu.org/licenses/>. 
-
+clear
 clearvars;
 
 % =========================================================================
@@ -98,7 +98,7 @@ for i = 2:nmics
    aL(i) = TOA_left - aL(1)
    TOA_right = (find(sensor_right(i,:)==max(sensor_right(i,:))))*timeStep;
    aR(i) = TOA_right - aR(1)
-
+   
 end
 aL(1) = 0;
 aR(1) = 0;
@@ -134,9 +134,8 @@ P4 = angle(Y)
 P3 = P4(1:L/2+1);
 index = find(P1==max(P1))
 
-a_left = delayCalculation(sensor_left)
-a_right = delayCalculation(sensor_right)
-
+[a_left, response_left] = delayCalculation(sensor_left)
+[a_right, response_right] = delayCalculation(sensor_right)
 %% =========================================================================
 % VISUALISATION
 % =========================================================================
@@ -181,16 +180,16 @@ title("Array right");
 colorbar;
 
 subplot(2,2,2)
-plot(sensor_left(7,:))
+plot(response_left)
 xlabel('Time Step')
 ylabel('Amplitude measured')
-title("Left array middle sensor measurements")
+title("Left array response")
 
 subplot(2,2,4)
-plot(sensor_right(7,:))
+plot(response_right)
 xlabel('Time Step')
 ylabel('Amplitude measured')
-title("Right array middle sensor measurements")
+title("Right array response")
 
 figure
 subplot(2,1,1)
