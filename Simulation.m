@@ -132,10 +132,12 @@ f = (1/(timeStep))*(0:(L/2))/L;
 
 P4 = angle(Y)
 P3 = P4(1:L/2+1);
-index = find(P1==max(P1))
+index = find(f>=source_freq)
+index = index(1)
+[a_left, response_left] = delayCalculation(sensor_left, index)
+[a_right, response_right] = delayCalculation(sensor_right, index)
 
-[a_left, response_left] = delayCalculation(sensor_left)
-[a_right, response_right] = delayCalculation(sensor_right)
+
 %% =========================================================================
 % VISUALISATION
 % =========================================================================
