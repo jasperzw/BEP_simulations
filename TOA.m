@@ -64,7 +64,7 @@ source_mag = 10;         % [Pa]
 source.p = source_mag * sin(2 * pi * source_freq * kgrid.t_array);
 source.p = filterTimeSeries(kgrid, medium, source.p);
 
-amountSources = 100;
+amountSources = 5;
 source_set = []
 coordinate_set = []
 for i = 1:amountSources
@@ -90,7 +90,7 @@ end
 
 %% define both sensor array's
 x_offset = Nx/2;                 % [grid points]
-width = 50;                    % [grid points]
+width = 150;                    % [grid points]
 y_mid_left = (width-20)/4 + Ny/2 - width/2;
 y_mid_right = (width-20)/4 + Ny/2 + 10;
 sensor.mask = zeros(Nx, Ny);
