@@ -33,8 +33,8 @@ clearvars;
 % SIMULATION
 % =========================================================================
 %% create the computational grid
-Nx = 200;           % number of grid points in the x (row) direction
-Ny = 200;           % number of grid points in the y (column) direction
+Nx = 200;           % number of grid points in the x (row) direction normal used 200
+Ny = 200;           % number of grid points in the y (column) direction normal used 200
 dx = 1e-3;        % grid point spacing in the x direction [m]
 dy = 1e-3;        % grid point spacing in the y direction [m]
 kgrid = kWaveGrid(Nx, dx, Ny, dy);
@@ -64,7 +64,7 @@ source_mag = 10;         % [Pa]
 source.p = source_mag * sin(2 * pi * source_freq * kgrid.t_array);
 source.p = filterTimeSeries(kgrid, medium, source.p);
 
-amountSources = 5;
+amountSources = 1;
 source_set = []
 coordinate_set = []
 for i = 1:amountSources
@@ -74,7 +74,7 @@ for i = 1:amountSources
     
     %x = int16((Nx/2-20)*cos((2*pi*i)/amountSources) + 1)+Nx/2
     %y = int16((Ny/2-20)*sin((2*pi*i)/amountSources) + 1)+Ny/2
-    source.p_mask(x,y) = 1;
+    source.p_mask(y,x) = 1;
     
     source_set = [source_set source]
     coordinates = [x y]
@@ -90,7 +90,7 @@ end
 
 %% define both sensor array's
 x_offset = Nx/2;                 % [grid points]
-width = 150;                    % [grid points]
+width = 50;                    % [grid points]
 y_mid_left = (width-20)/4 + Ny/2 - width/2;
 y_mid_right = (width-20)/4 + Ny/2 + 10;
 sensor.mask = zeros(Nx, Ny);
@@ -100,7 +100,7 @@ sensor.mask(x_offset, ((Ny/2)-9):((Ny/2)+10)) = 0;
 %% run the simulation
 %input_args = {'RecordMovie', true, 'MovieName', 'example_movie'};
 %sensor_data = kspaceFirstOrder2D(kgrid, medium, source, sensor, input_args{:});
-tic
+simulationStart = tic
 sensor_data = []
 
 for i = 1:amountSources
@@ -109,26 +109,26 @@ for i = 1:amountSources
     %sensor_data = [sensor_data; runTime(kspaceFirstOrder2D(kgrid, medium, source_set(i), sensor, input_args{:}),coordinate_set(m:m+1))]
     sensor_data = [sensor_data; runTime(kspaceFirstOrder2D(kgrid, medium, source_set(i), sensor),coordinate_set(m:m+1))]
 end
-simulationRunTime = toc
+simulationRunTime = toc(simulationStart)
 timeStep = kgrid.dt
 
 %% get the TOA of each microphone
 %in the futur use beam forming and take the array as a possible one
 %microphone
 
-t = zeros(30,amountSources)
+t = zeros(30,amountSources);
 for i = 1:amountSources
     %check arrival time left side
     for n = 1:15
-        p = sensor_data(i).left(n,:)
+        p = sensor_data(i).left(n,:);
         temp = find(p>=0.2)*timeStep;
-        t(n,i) = temp(1)
+        t(n,i) = temp(1);
     end
     %check arrival time right side
     for n = 1:15
-        p = sensor_data(i).right(n,:)
+        p = sensor_data(i).right(n,:);
         temp = find(p>=0.2)*timeStep;
-        t(n+15,i) = temp(1)
+        t(n+15,i) = temp(1);
     end 
 end
 
