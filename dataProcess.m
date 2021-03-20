@@ -8,7 +8,7 @@ x_o = 26
 y_o = 100
 for i = 1:amountSources
     m = (i-1)*2+1;
-    Z_t = (t(1,i)-(sqrt(((X-double(coordinate_set(m)))*dx).^2+((Y-double(coordinate_set(m+1)))*dy).^2)/340)).^2;
+    Z_t = (t(30,i)-(sqrt(((X-double(coordinate_set(m)))*dx).^2+((Y-double(coordinate_set(m+1)))*dy).^2)/340)).^2;
     Z_t = Z_t;
     Z = Z+Z_t;
 end

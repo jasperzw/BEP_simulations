@@ -60,11 +60,11 @@ kgrid.makeTime(medium.sound_speed);
 
 % define a time varying sinusoidal source
 source_freq = 5e4;   % [Hz]
-source_mag = 10;         % [Pa]
+source_mag = 10e3*dx;         % [Pa]
 source.p = source_mag * sin(2 * pi * source_freq * kgrid.t_array);
 source.p = filterTimeSeries(kgrid, medium, source.p);
 
-amountSources = 1;
+amountSources = 5;
 source_set = []
 coordinate_set = []
 for i = 1:amountSources
@@ -121,13 +121,13 @@ for i = 1:amountSources
     %check arrival time left side
     for n = 1:15
         p = sensor_data(i).left(n,:);
-        temp = find(p>=0.2)*timeStep;
+        temp = find(p>=0.1)*timeStep;
         t(n,i) = temp(1);
     end
     %check arrival time right side
     for n = 1:15
         p = sensor_data(i).right(n,:);
-        temp = find(p>=0.2)*timeStep;
+        temp = find(p>=0.1)*timeStep;
         t(n+15,i) = temp(1);
     end 
 end

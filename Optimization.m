@@ -56,8 +56,11 @@ end
 
 error_optimization = sqrt((sensor_guess_set(:,1)-sensor_set(:,1)).^2+(sensor_guess_set(:,2)-sensor_set(:,2)).^2);
 
+
 middle = Nx/2;
 offset_plot = 50;
+
+figure
 subplot(2,2,1)
 plot(sensor_guess_set(1:15,1),sensor_guess_set(1:15,2))
 %xlim([middle-offset_plot middle+offset_plot])
@@ -70,8 +73,8 @@ plot(sensor_guess_set(16:30,1),sensor_guess_set(16:30,2))
 plot(sensor_set(1:15,1),sensor_set(1:15,2))
 plot(sensor_set(16:30,1),sensor_set(16:30,2))
 title("arrays in the simulation") 
-xlabel("Distance in mm")
-ylabel("Distance in mm")
+xlabel("Distance in millimeters")
+ylabel("Distance in millimeters")
 subplot(2,2,2)
 plot(error_optimization)
 title("error of specific microphone")
@@ -83,13 +86,17 @@ plot(sensor_guess_set(:,1))
 hold all
 plot(sensor_set(:,1))
 ylim([middle-offset_plot middle+offset_plot])
+title("Comparison of the Y-axis")
 xlabel("Microphone number")
 ylabel("Distance in mm")
+legend("Original position", "Estimated position")
 
 subplot(2,2,4)
 plot(sensor_guess_set(:,2))
 hold all
 plot(sensor_set(:,2))
 ylim([middle-offset_plot middle+offset_plot])
+title("Comparison of the X-axis")
 xlabel("Microphone number")
 ylabel("Distance in mm")
+legend("Original position", "Estimated position")
