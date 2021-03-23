@@ -1,9 +1,0 @@
-a = [1 2 3 5]
-b = [1 2 3 4 6]
-
-aCoordinate = [3 4; 3 6; 6 6]'
-bCoordinate = [8 8; 6 8; 
-
-scatter(aCoordinate(1,:),aCoordinate(2,:))
-xlim([0 10])
-ylim([0 10])
