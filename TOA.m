@@ -69,12 +69,13 @@ source_set = []
 coordinate_set = []
 for i = 1:amountSources
     source.p_mask = zeros(Nx, Ny);
-    x = round((Nx-20)*rand()+10)
-    y = round((Ny-20)*rand()+10)
-    
+    %x = round((Nx-20)*rand()+10)
+    %y = round((Ny-20)*rand()+10)
+    x = 50+i*25
+    y = 180
     %x = int16((Nx/2-20)*cos((2*pi*i)/amountSources) + 1)+Nx/2
     %y = int16((Ny/2-20)*sin((2*pi*i)/amountSources) + 1)+Ny/2
-    source.p_mask(y,x) = 1;
+    source.p_mask(x,y) = 1;
     
     source_set = [source_set source]
     coordinates = [x y]

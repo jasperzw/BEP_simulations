@@ -49,7 +49,7 @@ options.FunctionTolerance = 2e-09
 sensor_guess_set = [];
 
 for i = 1:30
-    fun = @(x)(t(i,:)-(sqrt(((x(1)-x_set)*dx).^2+((x(2)-y_set)*dy).^2)/340));
+    fun = @(x)(t(i,:)-(sqrt(((x(2)-x_set)*dx).^2+((x(1)-y_set)*dy).^2)/340));
     [x,resnorm,residual,exitflag,output] = lsqnonlin(fun,x0,lb,ub,options);
     sensor_guess_set = [sensor_guess_set; x];
 end
