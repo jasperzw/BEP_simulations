@@ -1,8 +1,9 @@
 ## Table of contents
-* [Simulations](## Simulations)
-* [Beamforming](## Beamforming)
-* [Optimalisation](## Optimalisation)
-* [Transformation](## Transformation)
+* [General info](#general-info)
+* [Simulations](#simulations)
+* [Beamforming](#beamforming)
+* [Optimalisation](#optimalisation)
+* [Transformation](#transformation)
 
 ## General info
 simulation for my BEP to create acoastic position calibration for microphone array's
