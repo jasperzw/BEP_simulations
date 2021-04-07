@@ -1,15 +1,17 @@
-t = zeros(30,amountSources);
-for i = 1:amountSources
-    %check arrival time left side
-    for n = 1:15
-        p = sensor_data(i).left(n,:);
-        temp = find(p>=0.01)*timeStep;
-        t(n,i) = temp(1);
-    end
-    %check arrival time right side
-    for n = 1:15
-        p = sensor_data(i).right(n,:);
-        temp = find(p>=0.01)*timeStep;
-        t(n+15,i) = temp(1);
-    end 
+microphones = sunFlowerArray
+sources = results
+timeSet = 0:t_array(2):2;
+microphoneReadouts = []
+for microphone = microphones'
+   soundLine = 0*timeSet;
+   for source = sources
+      dis_vector = microphone - source.position;
+      distance = sqrt(dis_vector(1)^2+dis_vector(2)^2+dis_vector(3)^2);
+      delay = distance/medium_speed;
+      sound = STSS/(4*pi*distance^2)
+      temp = abs(timeSet - delay);
+      closest = find(temp == min(temp))
+      soundLine(closest:closest+length(sound)-1) = soundLine(closest:closest+length(sound)-1)+sound
+   end
+  microphoneReadOuts = [microphoneReadouts; soundLine]
 end
