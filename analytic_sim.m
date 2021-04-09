@@ -51,7 +51,7 @@ end
 
 [results]  = createReflectionMap(source,[wallSet(1) wallSet(2)]);
 [results]  = createReflectionMap(results,[wallSet(1) wallSet(2)]);
-[microphoneResults, timeSet] = soundSimulation(results,sunFlowerArray,medium_speed,STSS,t_array);
+[readOut, timeSet] = soundSimulation(results,sunFlowerArray,medium_speed,STSS,t_array);
 hold all
 for point = results
  plot(point.position(1),point.position(2),'xr')
