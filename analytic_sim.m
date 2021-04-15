@@ -11,7 +11,7 @@ STSS = source_mag*sin(2*pi*f.*t_array)
 wallSet = [wall([15; 7],[0; 7]); wall([0; 0],[43; 0]); wall([19.5; 7],[43; 7]); wall([15; 7],[15; 32]); wall([19.5;7],[19.5; 32])];
 
 %set initial source
-source = sourceClass([7.5;3.5;1],[])
+sources = [sourceClass([7.5;5.5;1],[]) sourceClass([8.5;3.5;1],[]) sourceClass([9.5;1.5;1],[])] 
 medium_speed = 340;
 
 %set receiver
@@ -20,9 +20,9 @@ receiver_y = 5
 receiver_z = 3
 receiver = [receiver_x; receiver_y]
 load('sunFlowerArray.mat')
-sunFlowerArray(:,1) = sunFlowerArray(:,1)+receiver_x %x axis
-sunFlowerArray(:,2) = sunFlowerArray(:,2)+receiver_z %z axis
-sunFlowerArray(:,3) = sunFlowerArray(:,3)+receiver_y %y axis
+sunFlowerArray(:,1) = sunFlowerArray(:,1)+receiver_x; %x axis
+sunFlowerArray(:,2) = sunFlowerArray(:,2)+receiver_y; %y axis
+sunFlowerArray(:,3) = sunFlowerArray(:,3)+receiver_z; %z axis
 
 %plot information
 plot(receiver(1),receiver(2),'o')
@@ -33,31 +33,31 @@ x = []
 y = []
 
 for m = 1:length(wallSet)
- x = [wallSet(m).p1(1) wallSet(m).p2(1)]
- y = [wallSet(m).p1(2) wallSet(m).p2(2)]
+ x = [wallSet(m).p1(1) wallSet(m).p2(1)];
+ y = [wallSet(m).p1(2) wallSet(m).p2(2)];
  hold all
  line(x,y,'color','black')
 end
 
 
 
-%  function computeImageSources(maxOrder) 
-%      for order = 1 to maxOrder do 
-%          for each source in sources do if source.order == (order - 1) 
-%              for each surface in geometry do if (surface != source.reflecor) 
-%                  newSource = reflect(source, surface) 
-%                  newSource.reflector = surface 
-%                  sources[nofSources++] = newSource
-
-[results]  = createReflectionMap(source,[wallSet(1) wallSet(2)]);
+readOut = [];
+for i = 1:length(sources)
+[results]  = createReflectionMap(sources(i),[wallSet(1) wallSet(2)]);
 [results]  = createReflectionMap(results,[wallSet(1) wallSet(2)]);
-[readOut, timeSet] = soundSimulation(results,sunFlowerArray,medium_speed,STSS,t_array);
+[microphoneResults, timeSet] = soundSimulation(results,sunFlowerArray,medium_speed,STSS,t_array);
+readOut = [readOut; microphoneResults]; 
 hold all
 for point = results
  plot(point.position(1),point.position(2),'xr')
 end
 
 plot(results(1).position(1),results(1).position(2),'xb')
+end
+
+%figure
+%plot(readOut(1,:))
+
 
 function [mirrorPoint] = reflect(source,surface)
 % MYMEAN Local function that calculates mean of array.
@@ -96,7 +96,7 @@ for microphone = microphones'
       dis_vector = microphone - source.position;
       distance = sqrt(dis_vector(1)^2+dis_vector(2)^2+dis_vector(3)^2);
       delay = distance/medium_speed;
-      sound = STSS/(4*pi*distance^2);
+      sound = STSS/(distance);
       temp = abs(timeSet - delay);
       closest = find(temp == min(temp));
       soundLine(closest:closest+length(sound)-1) = soundLine(closest:closest+length(sound)-1)+sound;
