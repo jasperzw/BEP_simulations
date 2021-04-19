@@ -11,21 +11,21 @@ for i = 1:length(sources)
 end
 
 sensor_set = []
-x0 = [10,10,0];
+x0 = [15,5,3];
 lb = [0,0,0];
 ub = [50,50,10];
-options = optimoptions('lsqnonlin','Display','off');
-%options.OptimalityTolerance = 1e-09;
-%options.FunctionTolerance = 2e-09
+options = optimoptions('lsqnonlin','Display','iter');
+options.OptimalityTolerance = 1e-09;
+options.FunctionTolerance = 2e-09
 sensor_guess_set = [];
 
 for i = 1:64
-    fun = @(x)(t(i,:)-(sqrt((x(1)-x_set).^2+(x(2)-y_set).^2+(x(3)-z_set).^2)/medium_speed));
+    fun = @(x)(t_u(i,:)-(sqrt((x(1)-x_set).^2+(x(2)-y_set).^2+(x(3)-z_set).^2)/medium_speed));
     [x,resnorm,residual,exitflag,output] = lsqnonlin(fun,x0,lb,ub,options);
     sensor_guess_set = [sensor_guess_set; x];
 end
 
-%error_optimization = sqrt((sensor_guess_set(:,1)-sensor_set(:,1)).^2+(sensor_guess_set(:,2)-sensor_set(:,2)).^2);
+error_optimization = sqrt((sensor_guess_set(:,1)-receiver_x).^2+(sensor_guess_set(:,2)-receiver_y).^2+(sensor_guess_set(:,3)-receiver_z).^2)
 
 scatter(sensor_guess_set(:,1),sensor_guess_set(:,2)) 
 
