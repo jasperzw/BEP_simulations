@@ -20,7 +20,7 @@ end
 t_u = t; 
 t = t-t(1,:)
 waveVector = zeros(length(sunFlowerArray),3);
-temp = zeros(length(sunFlowerArray),2);
+temp = zeros(length(sunFlowerArray),5);
 array2d = [sunFlowerArray(:,1)-receiver_x sunFlowerArray(:,2)-receiver_y]
 
 for i = 2:length(sunFlowerArray)
@@ -31,17 +31,18 @@ for i = 2:length(sunFlowerArray)
     temp(i,1) = angleV;
     z = tan(angleV)*a;
     temp(i,2) = z;
-    angleVector = [-distanceVector z];
+    angleVector = [-distanceVector/norm(distanceVector) angleV];
     if z <0 
         angleVector = -angleVector;
     end
-    angleVector = angleVector/norm(angleVector);
+    temp(i,3:5) = angleVector
+    %angleVector = angleVector/norm(angleVector);
     waveVector(i,:) = angleVector;
 end
 
 %finalVector = sum(waveVector)
 finalVector = [mean(waveVector(:,1)) mean(waveVector(:,2)) mean(waveVector(:,3))]
-finalVector = finalVector/norm(finalVector);
+%finalVector = finalVector/norm(finalVector);
 finalAngleXY = atand(finalVector(2)/(finalVector(1)))
 finalAngleZ = atand(finalVector(3)/sqrt(finalVector(1)^2+finalVector(2)^2))
 
