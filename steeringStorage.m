@@ -10,7 +10,7 @@ classdef steeringStorage
         function obj = steeringStorage(delay)
             %UNTITLED Construct an instance of this class
             %   Detailed explanation goes here
-            obj.delaySet = delay
+            obj.delaySet = delay;
         end
     end
 end
