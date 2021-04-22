@@ -1,8 +1,10 @@
-
+function [sensor_guess_set, error_optimization] = optimalisation_analytic(sources,readOut,receiver,d,STSS,t_array,medium_speed)
 
 x_set = [];
 y_set = [];
 z_set = [];
+
+sunFlowerArray = receiver.arrayPattern;
 
 for i = 1:length(sources)
     x_set = [x_set sources(i).position(1)];
@@ -11,7 +13,7 @@ for i = 1:length(sources)
 end
 
 sensor_set = []
-x0 = [9,2,3];
+x0 = [15,5,3];
 lb = [0,0,0];
 ub = [50,50,10];
 options = optimoptions('lsqnonlin','Display','iter');
@@ -19,15 +21,40 @@ options.OptimalityTolerance = 1e-20;
 options.FunctionTolerance = 1e-20
 sensor_guess_set = [];
 
-for i = 1:1
-    fun = @(x)(t_u(i,:)-(sqrt((x(1)-x_set).^2+(x(2)-y_set).^2+(x(3)-z_set).^2)/medium_speed));
-    [x,resnorm,residual,exitflag,output] = lsqnonlin(fun,x0,lb,ub,options);
-    sensor_guess_set = [sensor_guess_set; x];
+d = d-d(1,:);
+
+finalReadOut = zeros(length(sources),length(readOut));
+%% apply delays as beamformer
+for m = 1:length(sources)
+    for i = 1:length(sunFlowerArray)
+        finalReadOut(m,:) = finalReadOut(m,:) + shift(readOut(i+(m-1)*length(sunFlowerArray),:),-d(i,m));
+    end
+    % apply bandpass filter
+    %finalReadOut(m,:) = bandpass(finalReadOut(m,:),[1e3 7e3],1/t_array(2));
 end
 
-error_optimization = sqrt((sensor_guess_set(:,1)-receiver_x).^2+(sensor_guess_set(:,2)-receiver_y).^2+(sensor_guess_set(:,3)-receiver_z).^2)
+%% calculate final delay
+finalDelay = zeros(1,length(sources));
 
-scatter(sensor_guess_set(:,1),sensor_guess_set(:,2)) 
+for m = 1:length(sources)
+    [x y] = xcorr(finalReadOut(m,:),STSS);
+    index = find(x==max(x));
+    steps = y(index);
+    finalDelay(m) = steps*t_array(2);
+end
+
+
+
+
+fun = @(x)(finalDelay(:)'-(sqrt((x(1)-x_set).^2+(x(2)-y_set).^2+(x(3)-z_set).^2)/medium_speed));
+[x,resnorm,residual,exitflag,output] = lsqnonlin(fun,x0,lb,ub,options);
+sensor_guess_set = x
+
+
+error_optimization = sqrt((sensor_guess_set(:,1)-receiver.arrayPattern(1,1)).^2+(sensor_guess_set(:,2)-receiver.arrayPattern(1,2)).^2+(sensor_guess_set(:,3)-receiver.arrayPattern(1,3)).^2)
+
+%scatter(sensor_guess_set(:,1),sensor_guess_set(:,2))
+end
 
 % middle = Nx/2;
 % offset_plot = 50;
@@ -72,3 +99,15 @@ scatter(sensor_guess_set(:,1),sensor_guess_set(:,2))
 % xlabel("Microphone number")
 % ylabel("Distance in mm")
 % legend("Original position", "Estimated position")
+
+function [result] = shift(signal,amount)
+result = zeros(1,length(signal));
+temp = signal;
+if amount<0
+    temp = [temp(abs(amount)+1:end) zeros(1,abs(amount))];
+end
+if amount>0
+    temp = [zeros(1,abs(amount)) temp(1:end-abs(amount))];
+end
+result = result + temp;
+end

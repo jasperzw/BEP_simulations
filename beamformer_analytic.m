@@ -1,7 +1,8 @@
-
+function [t_u d angleStorage] = beamformer_analytic(sunFlowerArray,sources,readOut,STSS,t_array)
 middle = sunFlowerArray(1,:);
 
 t = zeros(length(sunFlowerArray),length(sources));
+d = zeros(length(sunFlowerArray),length(sources));
 
 for nmbSource = 1:length(sources)
 delayArray = zeros(1,length(sunFlowerArray));
@@ -22,16 +23,17 @@ for i = 1:length(sunFlowerArray)
    %steps = -y(steps(end));
    %steps = find(readOut(i+(nmbSource-1)*length(sunFlowerArray),:)>10,1);
    %steps = find(x>10^6,1)
-   delayArray(i) = steps*t_array(2);
+   delayArray(i) = steps;
 end
 
 %delayArray = delayArray;
-t(:,nmbSource) = delayArray';
+d(:,nmbSource) = delayArray';
+t(:,nmbSource) = delayArray'*t_array(2);
 end
 t_u = t; 
 t = t-t(1,:)
 
-load comparison.mat
+load data/comparison.mat
 
 errorStorage = zeros(size(resultStorage));
 display("going to error calculation")
@@ -59,25 +61,26 @@ end
 % xlabel("index of azimuth")
 % ylabel("index of inclination")
 % zlabel("absolute error")
+% 
+% figure
+% subplot(4,1,1)
+% scatter(sunFlowerArray(:,1),sunFlowerArray(:,2), 50, t(:,1), 'filled')
+% axis image
+% title("First source")
+% subplot(4,1,2)
+% scatter(sunFlowerArray(:,1),sunFlowerArray(:,2), 50, t(:,2), 'filled')
+% axis image
+% title("Second source")
+% subplot(4,1,3)
+% scatter(sunFlowerArray(:,1),sunFlowerArray(:,2), 50, t(:,3), 'filled')
+% axis image
+% title("Third source")
+% subplot(4,1,4)
+% scatter(sunFlowerArray(:,1),sunFlowerArray(:,2), 50, t(:,4), 'filled')
+% axis image
+% title("Fourth source")
 
-figure
-subplot(4,1,1)
-scatter(sunFlowerArray(:,1),sunFlowerArray(:,2), 50, t(:,1), 'filled')
-axis image
-title("First source")
-subplot(4,1,2)
-scatter(sunFlowerArray(:,1),sunFlowerArray(:,2), 50, t(:,2), 'filled')
-axis image
-title("Second source")
-subplot(4,1,3)
-scatter(sunFlowerArray(:,1),sunFlowerArray(:,2), 50, t(:,3), 'filled')
-axis image
-title("Third source")
-subplot(4,1,4)
-scatter(sunFlowerArray(:,1),sunFlowerArray(:,2), 50, t(:,4), 'filled')
-axis image
-title("Fourth source")
-
+end
 % figure
 % scatter(array2d(:,1),array2d(:,2))
 % hold all
@@ -107,3 +110,5 @@ title("Fourth source")
 % % hold all
 % % plot(readOut(1,:))
 % % xlim([0 6e3])
+
+

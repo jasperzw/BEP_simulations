@@ -27,4 +27,4 @@ for inclination = inclinationSet
    resultStorage = [resultStorage; azimuthStorage];
 end
 
-save("comparison.mat","resultStorage")
+save("data/comparison.mat","resultStorage","azimuthSet","inclinationSet")
