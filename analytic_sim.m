@@ -11,7 +11,7 @@ STSS = source_mag*sin(2*pi*f.*t_array)
 wallSet = [wall([15; 7],[0; 7]); wall([0; 0],[43; 0]); wall([19.5; 7],[43; 7]); wall([15; 7],[15; 32]); wall([19.5;7],[19.5; 32])];
 
 %set initial source
-sources = [sourceClass([7.5;5.5;1],[]) sourceClass([8.5;3.5;1],[]) sourceClass([9.5;1.5;1],[]),sourceClass([25; 5; 1],[])] 
+sources = [sourceClass([7.5;5.5;1],[]) sourceClass([8.5;3.5;1],[]) sourceClass([9.5;1.5;1],[]),sourceClass([16; 3; 1],[])] 
 medium_speed = 340;
 
 %set receiver
