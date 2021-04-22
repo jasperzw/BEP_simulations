@@ -11,15 +11,15 @@ for i = 1:length(sources)
 end
 
 sensor_set = []
-x0 = [15,5,3];
+x0 = [9,2,3];
 lb = [0,0,0];
 ub = [50,50,10];
 options = optimoptions('lsqnonlin','Display','iter');
-options.OptimalityTolerance = 1e-09;
-options.FunctionTolerance = 2e-09
+options.OptimalityTolerance = 1e-20;
+options.FunctionTolerance = 1e-20
 sensor_guess_set = [];
 
-for i = 1:64
+for i = 1:1
     fun = @(x)(t_u(i,:)-(sqrt((x(1)-x_set).^2+(x(2)-y_set).^2+(x(3)-z_set).^2)/medium_speed));
     [x,resnorm,residual,exitflag,output] = lsqnonlin(fun,x0,lb,ub,options);
     sensor_guess_set = [sensor_guess_set; x];

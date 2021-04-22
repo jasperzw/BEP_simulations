@@ -1,17 +1,13 @@
-microphones = sunFlowerArray
-sources = results
-timeSet = 0:t_array(2):2;
-microphoneReadouts = []
-for microphone = microphones'
-   soundLine = 0*timeSet;
-   for source = sources
-      dis_vector = microphone - source.position;
-      distance = sqrt(dis_vector(1)^2+dis_vector(2)^2+dis_vector(3)^2);
-      delay = distance/medium_speed;
-      sound = STSS/(4*pi*distance^2)
-      temp = abs(timeSet - delay);
-      closest = find(temp == min(temp))
-      soundLine(closest:closest+length(sound)-1) = soundLine(closest:closest+length(sound)-1)+sound
-   end
-  microphoneReadOuts = [microphoneReadouts; soundLine]
+[x set] = xcorr(readOut(1,:),STSS)
+
+%grab only positive
+index = find(set==0)
+x = x(index:end)
+[pks loc] = findpeaks(x)
+highest = maxk(pks,4)
+index = length(highest)
+for i = 1:length(highest)
+index(i) = find(x == highest(i))
 end
+
+result = min(index)

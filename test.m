@@ -1,3 +1,4 @@
+
 azimuthSet = 0:pi/200:pi/2; %azimuth is form [-pi/2 pi/2] but we only take one half
 inclinationSet = 0:pi/200:pi*2;
 r = 1;
