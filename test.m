@@ -1,14 +1,11 @@
-v1 = [0 0; 0 0 ; 0 0]
-v2 = [0 0.02; 0 0.05; 0 0.01]
+storage = zeros(length(sunFlowerArray),length(sources))
+i=1
 
-plot3(v1(1,:),v1(2,:),v1(3,:))
-hold all
-plot3(v2(1,:),v2(2,:),v2(3,:))
-
-medium_speed = 340
-delay = 0.02/medium_speed;
-
-distanceVector = v2(:,2)-v1(:,2);
-a = sqrt(sum(distanceVector.^2))
-b = delay*medium_speed; 
-angleVector = acosd(b/a);
+for i = 1:length(sunFlowerArray)
+    for y = 1:length(sources)
+       disVector = sunFlowerArray(i,:)' - sources(y).position;
+       dis = sqrt(sum(disVector.^2))
+       delay = dis/medium_speed;
+       storage(i,y) = delay;
+    end
+end

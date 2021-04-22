@@ -6,9 +6,20 @@ t = zeros(length(sunFlowerArray),length(sources));
 for nmbSource = 1:length(sources)
 delayArray = zeros(1,length(sunFlowerArray));
 for i = 1:length(sunFlowerArray)
-   [x y] = xcorr(STSS,readOut(i+(nmbSource-1)*length(sunFlowerArray),:));
-   steps = find(x>10^3);
-   steps = -y(steps(end));
+    [x y] = xcorr(readOut(i+(nmbSource-1)*length(sunFlowerArray),:),STSS);
+    index = find(y==0)
+    x = x(index:end);
+    [pks loc] = findpeaks(x);
+    highest = maxk(pks,4);
+    index = length(highest);
+    for f = 1:length(highest)
+    index(f) = find(x == highest(f));
+    end
+
+    steps = min(index);
+
+   %steps = find(x>10^5);
+   %steps = -y(steps(end));
    %steps = find(readOut(i+(nmbSource-1)*length(sunFlowerArray),:)>10,1);
    %steps = find(x>10^6,1)
    delayArray(i) = steps*t_array(2);
@@ -23,20 +34,20 @@ waveVector = zeros(length(sunFlowerArray),3);
 temp = zeros(length(sunFlowerArray),5);
 array2d = [sunFlowerArray(:,1)-receiver_x sunFlowerArray(:,2)-receiver_y]
 
-for i = 2:length(sunFlowerArray)
+for i = 2:2
     distanceVector = array2d(i,:);
     a = sqrt(sum(distanceVector.^2))
     b = (t(i,4)*medium_speed); 
-    angleV = acos(b/a);
+    angleV = asin(b/a);
     temp(i,1) = angleV;
     z = tan(angleV)*a;
     temp(i,2) = z;
-    angleVector = [-distanceVector/norm(distanceVector) angleV];
-    if z <0 
-        angleVector = -angleVector;
-    end
+    angleVector = [-distanceVector z];
+    %if z <0 
+    %    angleVector = -angleVector;
+    %end
     temp(i,3:5) = angleVector
-    %angleVector = angleVector/norm(angleVector);
+    angleVector = angleVector/norm(angleVector);
     waveVector(i,:) = angleVector;
 end
 
@@ -48,9 +59,10 @@ finalAngleZ = atand(finalVector(3)/sqrt(finalVector(1)^2+finalVector(2)^2))
 
 figure
 for i = 2:length(sunFlowerArray)
-   plot3([0 waveVector(i,1)],[0 waveVector(i,2)],[0 waveVector(i,3)])
+   plot3([0 waveVector(i,1)],[0 waveVector(i,2)],[0 waveVector(i,3)],'b')
    hold all
 end
+plot3([0 finalVector(1)*100],[0 finalVector(2)*100],[0 finalVector(3)*100],'r')
 
 figure
 subplot(4,1,1)
@@ -74,6 +86,9 @@ figure
 scatter(array2d(:,1),array2d(:,2))
 hold all
 scatter(finalVector(1),finalVector(2))
+
+%figure
+%plot3([0 finalVector(1)],[0 finalVector(2)],[0 finalVector(3)])
 
 % Y = fft(readOut(1,:));
 % Fs = 1/(t_array(2));
