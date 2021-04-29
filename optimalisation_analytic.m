@@ -1,4 +1,4 @@
-function [sensor_guess_set, error_optimization] = optimalisation_analytic(sources,readOut,receiver,d,STSS,t_array,medium_speed)
+function [sensor_guess_set, error_optimization, finalDelay,  calculatedAngleStorage] = optimalisation_analytic(sources,readOut,receiver,d,STSS,t_array,medium_speed,x0,angleStorage)
 
 x_set = [];
 y_set = [];
@@ -13,14 +13,15 @@ for i = 1:length(sources)
 end
 
 sensor_set = []
-x0 = [15,5,3];
+%x0 = [18,6,3];
 lb = [0,0,0];
 ub = [50,50,10];
-options = optimoptions('lsqnonlin','Display','iter');
+options = optimoptions('lsqnonlin','Display','off');
 options.OptimalityTolerance = 1e-20;
-options.FunctionTolerance = 1e-20
+options.FunctionTolerance = 1e-20;
+options.StepTolerance = 1e-10;
 sensor_guess_set = [];
-
+d_u = d(1,:)*t_array(2);
 d = d-d(1,:);
 
 finalReadOut = zeros(length(sources),length(readOut));
@@ -38,20 +39,45 @@ finalDelay = zeros(1,length(sources));
 
 for m = 1:length(sources)
     [x y] = xcorr(finalReadOut(m,:),STSS);
-    index = find(x==max(x));
-    steps = y(index);
+    index = find(y==0);
+    x = x(index:end);
+    [pks loc] = findpeaks(x);
+    highest = maxk(pks,4);
+    index = length(highest);
+    for f = 1:length(highest)
+    index(f) = find(x == highest(f),1);
+    end
+
+    steps = min(index);
     finalDelay(m) = steps*t_array(2);
 end
 
+finalDelay = d_u;
 
+%create offset
 
+%timeSyncOffset = 2.9e-4*rand(1) %2.9e-4 is the travel time of sound for 10 cm
+
+%d_u = finalDelay + timeSyncOffset;
 
 fun = @(x)(finalDelay(:)'-(sqrt((x(1)-x_set).^2+(x(2)-y_set).^2+(x(3)-z_set).^2)/medium_speed));
-[x,resnorm,residual,exitflag,output] = lsqnonlin(fun,x0,lb,ub,options);
-sensor_guess_set = x
+x = lsqnonlin(fun,x0,lb,ub,options);
+sensor_guess_set = x;
 
 
 error_optimization = sqrt((sensor_guess_set(:,1)-receiver.arrayPattern(1,1)).^2+(sensor_guess_set(:,2)-receiver.arrayPattern(1,2)).^2+(sensor_guess_set(:,3)-receiver.arrayPattern(1,3)).^2)
+
+%caculate definitive angle
+calculatedAngleStorage = zeros(2,length(sources));
+for m = 1:length(sources)
+   vector = x' - sources(m).position;
+   azimuthOriginal = atand(vector(3)/sqrt(vector(1)^2+vector(2)^2));
+   inclinationOriginal = atand(vector(1)/vector(2))+90;
+   azimuthFinal = azimuthOriginal+angleStorage(1,m);
+   inclinationFinal = inclinationOriginal-angleStorage(2,m);
+   calculatedAngleStorage(1,m) = azimuthFinal';
+   calculatedAngleStorage(2,m) = inclinationFinal;
+end
 
 %scatter(sensor_guess_set(:,1),sensor_guess_set(:,2))
 end

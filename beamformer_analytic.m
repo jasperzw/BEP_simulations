@@ -8,13 +8,13 @@ for nmbSource = 1:length(sources)
 delayArray = zeros(1,length(sunFlowerArray));
 for i = 1:length(sunFlowerArray)
     [x y] = xcorr(readOut(i+(nmbSource-1)*length(sunFlowerArray),:),STSS);
-    index = find(y==0)
+    index = find(y==0);
     x = x(index:end);
     [pks loc] = findpeaks(x);
     highest = maxk(pks,4);
     index = length(highest);
     for f = 1:length(highest)
-    index(f) = find(x == highest(f));
+    index(f) = find(x == highest(f),1);
     end
 
     steps = min(index);
@@ -31,14 +31,14 @@ d(:,nmbSource) = delayArray';
 t(:,nmbSource) = delayArray'*t_array(2);
 end
 t_u = t; 
-t = t-t(1,:)
+t = t-t(1,:);
 
-load data/comparison.mat
+load data/comparison.mat;
 
 errorStorage = zeros(size(resultStorage));
-display("going to error calculation")
+display("going to error calculation");
 
-angleStorage = zeros(2,length(sources))
+angleStorage = zeros(2,length(sources));
 
 for m = 1:length(sources)
     for i = 1:size(resultStorage,1)
@@ -49,9 +49,9 @@ for m = 1:length(sources)
        end
     end
 
-    [row col] = find(errorStorage == min(min(errorStorage)))
-    resultAzimuth = (180/pi)*azimuthSet(col)
-    resultInclination = (180/pi)*inclinationSet(row)
+    [row col] = find(errorStorage == min(min(errorStorage)));
+    resultAzimuth = (180/pi)*azimuthSet(col);
+    resultInclination = (180/pi)*inclinationSet(row);
     angleStorage(1,m) = resultAzimuth;
     angleStorage(2,m) = resultInclination;
 end

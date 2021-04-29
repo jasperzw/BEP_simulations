@@ -10,7 +10,7 @@ classdef readOutStorage
         function obj = readOutStorage(inputArg1)
             %READOUTSTORAGE Construct an instance of this class
             %   Detailed explanation goes here
-            obj.data = inputArg1
+            obj.data = inputArg1;
         end
     end
 end

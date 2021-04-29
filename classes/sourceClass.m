@@ -9,8 +9,8 @@ classdef sourceClass
     
     methods
         function obj = sourceClass(positionSet, surfaceSet)
-            obj.surface = surfaceSet
-            obj.position = positionSet
+            obj.surface = surfaceSet;
+            obj.position = positionSet;
         end
     end
 end
