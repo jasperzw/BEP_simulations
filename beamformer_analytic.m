@@ -1,19 +1,20 @@
-
+function [t_u d angleStorage] = beamformer_analytic(sunFlowerArray,sources,readOut,STSS,t_array)
 middle = sunFlowerArray(1,:);
 
 t = zeros(length(sunFlowerArray),length(sources));
+d = zeros(length(sunFlowerArray),length(sources));
 
 for nmbSource = 1:length(sources)
 delayArray = zeros(1,length(sunFlowerArray));
 for i = 1:length(sunFlowerArray)
     [x y] = xcorr(readOut(i+(nmbSource-1)*length(sunFlowerArray),:),STSS);
-    index = find(y==0)
+    index = find(y==0);
     x = x(index:end);
     [pks loc] = findpeaks(x);
     highest = maxk(pks,4);
     index = length(highest);
     for f = 1:length(highest)
-    index(f) = find(x == highest(f));
+    index(f) = find(x == highest(f),1);
     end
 
     steps = min(index);
@@ -22,44 +23,44 @@ for i = 1:length(sunFlowerArray)
    %steps = -y(steps(end));
    %steps = find(readOut(i+(nmbSource-1)*length(sunFlowerArray),:)>10,1);
    %steps = find(x>10^6,1)
-   delayArray(i) = steps*t_array(2);
+   delayArray(i) = steps;
 end
 
 %delayArray = delayArray;
-t(:,nmbSource) = delayArray';
+d(:,nmbSource) = delayArray';
+t(:,nmbSource) = delayArray'*t_array(2);
 end
 t_u = t; 
-t = t-t(1,:)
-% 
-% waveVector = zeros(length(sunFlowerArray),3);
-% temp = zeros(length(sunFlowerArray),5);
-% array2d = [sunFlowerArray(:,1)-receiver_x sunFlowerArray(:,2)-receiver_y]
-% 
-% for i = 2:length(sunFlowerArray)
-%     distanceVector = array2d(i,:);
-%     a = sqrt(sum(distanceVector.^2))
-%     b = (t(i,4)*medium_speed); 
-%     angleV = asin(b/a);
-%     temp(i,1) = angleV;
-%     z = tan(angleV)*a;
-%     temp(i,2) = z;
-%     angleVector = [-distanceVector/norm(distanceVector) angleV];
-%     temp(i,3:5) = angleVector
-%     %angleVector = angleVector/norm(angleVector);
-%     waveVector(i,:) = angleVector;
-% end
-% 
-% %finalVector = sum(waveVector)
-% finalVector = [mean(waveVector(:,1)) mean(waveVector(:,2)) mean(waveVector(:,3))]
-% %finalVector = finalVector/norm(finalVector);
-% finalAngleXY = atand(finalVector(2)/(finalVector(1)))
-% finalAngleZ = atand(finalVector(3)/sqrt(finalVector(1)^2+finalVector(2)^2))
-% 
+t = t-t(1,:);
+
+load data/comparison.mat;
+
+errorStorage = zeros(size(resultStorage));
+display("going to error calculation");
+
+angleStorage = zeros(2,length(sources));
+
+for m = 1:length(sources)
+    for i = 1:size(resultStorage,1)
+       for k = 1:size(resultStorage,2)
+           error = t(:,m)-resultStorage(i,k).delaySet;
+           error = sum(abs(error));
+           errorStorage(i,k) = error;
+       end
+    end
+
+    [row col] = find(errorStorage == min(min(errorStorage)));
+    resultAzimuth = (180/pi)*azimuthSet(col);
+    resultInclination = (180/pi)*inclinationSet(row);
+    angleStorage(1,m) = resultAzimuth;
+    angleStorage(2,m) = resultInclination;
+end
+
 % figure
-% for i = 2:length(sunFlowerArray)
-%    plot3([0 waveVector(i,1)],[0 waveVector(i,2)],[0 waveVector(i,3)])
-%    hold all
-% end
+% mesh(errorStorage)
+% xlabel("index of azimuth")
+% ylabel("index of inclination")
+% zlabel("absolute error")
 % 
 % figure
 % subplot(4,1,1)
@@ -78,7 +79,8 @@ t = t-t(1,:)
 % scatter(sunFlowerArray(:,1),sunFlowerArray(:,2), 50, t(:,4), 'filled')
 % axis image
 % title("Fourth source")
-% 
+
+end
 % figure
 % scatter(array2d(:,1),array2d(:,2))
 % hold all
@@ -108,3 +110,5 @@ t = t-t(1,:)
 % % hold all
 % % plot(readOut(1,:))
 % % xlim([0 6e3])
+
+
