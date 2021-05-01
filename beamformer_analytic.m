@@ -103,7 +103,7 @@ t = t-t(1,:)
 % % x = xcorr(STSS,readOut(1,:))
 % % plot(y,x)
 % % xlim([-6e3 0])
-% % subplot(2,1,2)
+% % subplot(2,1,0)
 % % plot(STSS)
 % % hold all
 % % plot(readOut(1,:))
