@@ -56,59 +56,7 @@ for m = 1:length(sources)
     angleStorage(2,m) = resultInclination;
 end
 
-% figure
-% mesh(errorStorage)
-% xlabel("index of azimuth")
-% ylabel("index of inclination")
-% zlabel("absolute error")
-% 
-% figure
-% subplot(4,1,1)
-% scatter(sunFlowerArray(:,1),sunFlowerArray(:,2), 50, t(:,1), 'filled')
-% axis image
-% title("First source")
-% subplot(4,1,2)
-% scatter(sunFlowerArray(:,1),sunFlowerArray(:,2), 50, t(:,2), 'filled')
-% axis image
-% title("Second source")
-% subplot(4,1,3)
-% scatter(sunFlowerArray(:,1),sunFlowerArray(:,2), 50, t(:,3), 'filled')
-% axis image
-% title("Third source")
-% subplot(4,1,4)
-% scatter(sunFlowerArray(:,1),sunFlowerArray(:,2), 50, t(:,4), 'filled')
-% axis image
-% title("Fourth source")
-
 end
-% figure
-% scatter(array2d(:,1),array2d(:,2))
-% hold all
-% scatter(finalVector(1),finalVector(2))
-% 
-% % Y = fft(readOut(1,:));
-% % Fs = 1/(t_array(2));
-% % L = length(Y);
-% % P2 = abs(Y/L);
-% % P1 = P2(1:L/2+1);
-% % P1(2:end-1) = 2*P1(2:end-1);
-% % 
-% % figure
-% % f = Fs*(0:(L/2))/L;
-% % plot(f,P1) 
-% % title('Single-Sided Amplitude Spectrum of X(t)')
-% % xlabel('f (Hz)')
-% % ylabel('|P1(f)|')
-% % 
-% % figure
-% % subplot(2,1,1)
-% % x = xcorr(STSS,readOut(1,:))
-% % plot(y,x)
-% % xlim([-6e3 0])
-% % subplot(2,1,0)
-% % plot(STSS)
-% % hold all
-% % plot(readOut(1,:))
-% % xlim([0 6e3])
+
 
 

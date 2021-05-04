@@ -21,7 +21,8 @@ coordinates = [[12 4 1];[14 4 1];[16 4 1];[14 6 1];[14 2 1]]; %cross E = 5.5465 
 %coordinates = [[9 4 1];[11 4 1];[13 4 1];[11 6 1];[11 2 1];[13 4 1];[15 4 1];[17 4 1];[15 6 1];[15 2 1]]; %E=5.6978 | Eo=0.0152 
 sources = [];
 
-coordinates(:,1) = coordinates(:,1)-2;
+coordinates(:,1) = coordinates(:,1)-1;
+coordinates(:,2) = coordinates(:,2)-0.5;
 
 for i = 1:size(coordinates,1)
    sources = [sources sourceClass(coordinates(i,:)',[])];
@@ -108,6 +109,8 @@ h(2) = plot(0,0,'xb', 'visible', 'off');
 h(3) = plot(0,0,'xr', 'visible', 'off');
 h(4) = plot(0,0,'pr', 'visible', 'off');
 legend(h, 'receiver','source','mirror source','estimated receiver');
+
+display(['mean error: ' num2str(mean(guess_error)*100) ' cm'])
 
 %legend("Original Source","Mirror Source","Original Receiver","Estimated Receiver")
 
