@@ -1,4 +1,4 @@
-function [finalDirectionVector angles] = angle_calculation_analytic(finalAngleStorage,sources,array_position)
+function [finalDirectionVector angles finalRotation] = angle_calculation_analytic(finalAngleStorage,sources,array_position)
 
 Roll = 0:359;
 dis = 0.3;
@@ -81,5 +81,51 @@ finalDirectionVector = mean(directionVectorSetNonOutlier)*5
 inclination = rad2deg(inclination);
 elevation = rad2deg(elevation);
 angles = [inclination elevation];
+
+finalRotation = []
+for m = 1:length(sources)
+U = finalDirectionVector
+Incoming = array_position-sources(m).position';
+U = U/norm(U);
+V = cross(U,[1 0 0]);
+V = V/norm(V);
+answer = [0 0 1];
+
+
+W = cross(V,U);
+W = W/norm(W);
+
+
+R = [W; V; U];
+
+O = U*inv(R);
+
+r_x = [[1 0 0];[0 cos(-pi/2) -sin(-pi/2)];[0 sin(-pi/2) cos(-pi/2)]]
+r_y = [[cos(-pi/2) 0 sin(-pi/2)];[0 1 0];[-sin(-pi/2) 0 cos(-pi/2)]]
+
+Y_n = O*r_x*R;
+X_n = O*r_y*R;
+Y_n = Y_n/norm(Y_n);
+X_n = X_n/norm(X_n);
+N = X_n;
+F = Y_n;
+
+X_component = dot(Incoming,X_n);
+Y_component = dot(Incoming,Y_n);
+
+I = [X_component Y_component];
+I = I/norm(I);
+
+theta = finalAngleStorage(2,m)
+R_o = [[cosd(theta) -sind(theta)];[sind(theta) cosd(theta)]];
+I = I*R_o;
+
+P = [I 0]
+P = P*R;
+P = P/norm(P);
+
+finalRotation = [finalRotation; P];
+end
+finalRotation = mean(rmoutliers(finalRotation));
 end
 %plot3([0 finalDirectionVector(1)],[0 finalDirectionVector(2)],[0 finalDirectionVector(3)],'g')

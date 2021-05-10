@@ -21,7 +21,7 @@ coordinates = [[12 4 1];[14 4 1];[16 4 1];[14 6 1];[14 2 1]]; %cross E = 5.5465 
 %coordinates = [[9 4 1];[11 4 1];[13 4 1];[11 6 1];[11 2 1];[13 4 1];[15 4 1];[17 4 1];[15 6 1];[15 2 1]]; %E=5.6978 | Eo=0.0152 
 sources = [];
 
-coordinates(:,1) = coordinates(:,1)-1;
+coordinates(:,1) = coordinates(:,1)-0.5;
 coordinates(:,2) = coordinates(:,2)-0.5;
 
 for i = 1:size(coordinates,1)
@@ -39,7 +39,7 @@ load('data/sunFlowerArray.mat')
 coordinatesReceiver = [[10 6 3];[10 1 3];[18 6 3];[18 1 3]];
 receivers = [];
 for i = 1:size(coordinatesReceiver,1)
-   receivers = [receivers receiverClass([sunFlowerArray(:,1)+coordinatesReceiver(i,1) sunFlowerArray(:,3)+coordinatesReceiver(i,2) sunFlowerArray(:,1)+coordinatesReceiver(i,3)])];
+   receivers = [receivers receiverClass([sunFlowerArray(:,1)+coordinatesReceiver(i,1) sunFlowerArray(:,3)+coordinatesReceiver(i,2) sunFlowerArray(:,2)+coordinatesReceiver(i,3)])];
 end
 
 %plot information
@@ -93,6 +93,7 @@ delayStorage = zeros(length(receivers),length(sources));
 calculatedAngleStorage = zeros(2,length(receivers));
 finalDirectionVectorStorage = []
 absoluteAngle = [];
+finalOrientationVector = [];
 for i = 1:length(receivers)
     m = (i-1)*2+1;
     [t_u d angleStorage] = beamformer_analytic(receivers(i).arrayPattern,sources,receiverReadOut(i).data,STSS,t_array);
@@ -102,9 +103,10 @@ for i = 1:length(receivers)
     guess_error = [guess_error error_optimization];
     calculatedAngleStorage(:,i) = mean(calculatedAngleStorage,2);
     delayStorage(i,:) = finalDelay;
-    [finalDirectionVector angles] = angle_calculation_analytic(angleStorage,sources,guess_set(i,:));
+    [finalDirectionVector angles finalRotation] = angle_calculation_analytic(angleStorage,sources,guess_set(i,:));
     finalDirectionVectorStorage = [finalDirectionVectorStorage; finalDirectionVector];
     absoluteAngle = [absoluteAngle; angles];
+    finalOrientationVector = [finalOrientationVector; finalRotation];
     scatter(sensor_guess_set(1),sensor_guess_set(2),'pr')
 end
 
@@ -117,22 +119,26 @@ legend(h, 'receiver','source','mirror source','estimated receiver');
 
 
 figure
-subplot(2,2,1)
+subplot(3,2,1)
 scatter(sunFlowerArray(:,1),sunFlowerArray(:,2), 50, t_u(:,1), 'filled')
 axis image
 title("First source")
-subplot(2,2,2)
+subplot(3,2,2)
 scatter(sunFlowerArray(:,1),sunFlowerArray(:,2), 50, t_u(:,2), 'filled')
 axis image
 title("Second source")
-subplot(2,2,3)
+subplot(3,2,3)
 scatter(sunFlowerArray(:,1),sunFlowerArray(:,2), 50, t_u(:,3), 'filled')
 axis image
 title("Third source")
-subplot(2,2,4)
+subplot(3,2,4)
 scatter(sunFlowerArray(:,1),sunFlowerArray(:,2), 50, t_u(:,4), 'filled')
 axis image
 title("Fourth source")
+subplot(3,2,5)
+scatter(sunFlowerArray(:,1),sunFlowerArray(:,2), 50, t_u(:,5), 'filled')
+axis image
+title("Fith source")
 
 display(['mean error: ' num2str(mean(guess_error)*100) ' cm'])
 

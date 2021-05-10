@@ -49,12 +49,13 @@ for m = 1:length(sources)
        end
     end
 
-    [row col] = find(errorStorage == min(min(errorStorage)));
+    [row col] = find(errorStorage == min(min(errorStorage)),1);
     resultAzimuth = (180/pi)*azimuthSet(col);
     resultInclination = (180/pi)*inclinationSet(row);
-    %angleStorage(1,m) = resultAzimuth;
-    %angleStorage(2,m) = resultInclination;
+    angleStorage(1,m) = resultAzimuth;
+    angleStorage(2,m) = resultInclination;
 end
+
 
 end
 
