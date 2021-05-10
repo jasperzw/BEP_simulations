@@ -39,7 +39,7 @@ load('data/sunFlowerArray.mat')
 coordinatesReceiver = [[10 6 3];[10 1 3];[18 6 3];[18 1 3]];
 receivers = [];
 for i = 1:size(coordinatesReceiver,1)
-   receivers = [receivers receiverClass([sunFlowerArray(:,1)+coordinatesReceiver(i,1) sunFlowerArray(:,3)+coordinatesReceiver(i,2) sunFlowerArray(:,2)+coordinatesReceiver(i,3)])];
+   receivers = [receivers receiverClass([sunFlowerArray(:,1)+coordinatesReceiver(i,1) sunFlowerArray(:,3)+coordinatesReceiver(i,2) sunFlowerArray(:,1)+coordinatesReceiver(i,3)])];
 end
 
 %plot information
@@ -91,6 +91,8 @@ guess_set = [];
 guess_error = [];
 delayStorage = zeros(length(receivers),length(sources));
 calculatedAngleStorage = zeros(2,length(receivers));
+finalDirectionVectorStorage = []
+absoluteAngle = [];
 for i = 1:length(receivers)
     m = (i-1)*2+1;
     [t_u d angleStorage] = beamformer_analytic(receivers(i).arrayPattern,sources,receiverReadOut(i).data,STSS,t_array);
@@ -100,6 +102,9 @@ for i = 1:length(receivers)
     guess_error = [guess_error error_optimization];
     calculatedAngleStorage(:,i) = mean(calculatedAngleStorage,2);
     delayStorage(i,:) = finalDelay;
+    [finalDirectionVector angles] = angle_calculation_analytic(angleStorage,sources,guess_set(i,:));
+    finalDirectionVectorStorage = [finalDirectionVectorStorage; finalDirectionVector];
+    absoluteAngle = [absoluteAngle; angles];
     scatter(sensor_guess_set(1),sensor_guess_set(2),'pr')
 end
 
@@ -109,6 +114,25 @@ h(2) = plot(0,0,'xb', 'visible', 'off');
 h(3) = plot(0,0,'xr', 'visible', 'off');
 h(4) = plot(0,0,'pr', 'visible', 'off');
 legend(h, 'receiver','source','mirror source','estimated receiver');
+
+
+figure
+subplot(2,2,1)
+scatter(sunFlowerArray(:,1),sunFlowerArray(:,2), 50, t_u(:,1), 'filled')
+axis image
+title("First source")
+subplot(2,2,2)
+scatter(sunFlowerArray(:,1),sunFlowerArray(:,2), 50, t_u(:,2), 'filled')
+axis image
+title("Second source")
+subplot(2,2,3)
+scatter(sunFlowerArray(:,1),sunFlowerArray(:,2), 50, t_u(:,3), 'filled')
+axis image
+title("Third source")
+subplot(2,2,4)
+scatter(sunFlowerArray(:,1),sunFlowerArray(:,2), 50, t_u(:,4), 'filled')
+axis image
+title("Fourth source")
 
 display(['mean error: ' num2str(mean(guess_error)*100) ' cm'])
 

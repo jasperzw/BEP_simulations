@@ -1,4 +1,4 @@
-function [t_u d angleStorage] = beamformer_analytic(sunFlowerArray,sources,readOut,STSS,t_array)
+function [t_u d angleStorage errorStorage] = beamformer_analytic(sunFlowerArray,sources,readOut,STSS,t_array)
 middle = sunFlowerArray(1,:);
 
 t = zeros(length(sunFlowerArray),length(sources));
@@ -52,8 +52,8 @@ for m = 1:length(sources)
     [row col] = find(errorStorage == min(min(errorStorage)));
     resultAzimuth = (180/pi)*azimuthSet(col);
     resultInclination = (180/pi)*inclinationSet(row);
-    angleStorage(1,m) = resultAzimuth;
-    angleStorage(2,m) = resultInclination;
+    %angleStorage(1,m) = resultAzimuth;
+    %angleStorage(2,m) = resultInclination;
 end
 
 end
