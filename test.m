@@ -60,7 +60,7 @@ Y_component = dot(Incoming,Y_n);
 I = [X_component Y_component];
 I = I/norm(I);
 
-theta = finalAngleStorage(8,1)
+theta = -finalAngleStorage(8,1)
 R_o = [[cosd(theta) -sind(theta)];[sind(theta) cosd(theta)]];
 I = I*R_o;
 

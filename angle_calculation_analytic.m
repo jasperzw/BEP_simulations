@@ -1,6 +1,6 @@
 function [finalDirectionVector angles finalRotation] = angle_calculation_analytic(finalAngleStorage,sources,array_position)
 
-Roll = 0:359;
+Roll = 0:5:359;
 dis = 0.3;
 color = ['r','m','c','y','g'];
 
@@ -123,6 +123,16 @@ I = I*R_o;
 P = [I 0]
 P = P*R;
 P = P/norm(P);
+
+A = dot(Incoming,U)*U;
+C = Incoming-A;
+C = C/norm(C);
+C = C*inv(R);
+
+R_z = [[cosd(theta) -sind(theta) 0]; [sind(theta) cosd(theta) 0]; [0 0 1]];
+
+C = C*R_z;
+C = C*R;
 
 finalRotation = [finalRotation; P];
 end

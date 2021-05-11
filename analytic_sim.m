@@ -97,6 +97,9 @@ finalOrientationVector = [];
 for i = 1:length(receivers)
     m = (i-1)*2+1;
     [t_u d angleStorage] = beamformer_analytic(receivers(i).arrayPattern,sources,receiverReadOut(i).data,STSS,t_array);
+    if mod(i,2)==0
+        angleStorage(2,:) = -angleStorage(2,:)
+    end
     finalAngleStorage(m:m+1,:) = angleStorage;
     [sensor_guess_set, error_optimization, finalDelay,  calculatedAngleStorage] = optimalisation_analytic(sources,receiverReadOut(i).data,receivers(i),d,STSS,t_array,medium_speed,x0,angleStorage);
     guess_set = [guess_set; sensor_guess_set];
