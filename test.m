@@ -27,8 +27,8 @@ color = ['r','m','c','y','g'];
 finalDirection = zeros(length(sources),length(Roll),3);
 
 
-U = finalDirectionVectorStorage(3,:)
-Incoming = guess_set(3,:)-sources(1).position'
+U = finalDirectionVectorStorage(4,:)
+Incoming = guess_set(4,:)-sources(1).position'
 Incoming = -Incoming
 U = U/norm(U);
 V = cross(U,[1 0 0]);
@@ -44,8 +44,8 @@ R = [W; V; U];
 
 O = U*inv(R);
 
-r_x = [[1 0 0];[0 cos(-pi/2) -sin(-pi/2)];[0 sin(-pi/2) cos(-pi/2)]]
-r_y = [[cos(-pi/2) 0 sin(-pi/2)];[0 1 0];[-sin(-pi/2) 0 cos(-pi/2)]]
+r_x = [[1 0 0];[0 cos(pi/2) -sin(pi/2)];[0 sin(pi/2) cos(pi/2)]]
+r_y = [[cos(pi/2) 0 sin(pi/2)];[0 1 0];[-sin(pi/2) 0 cos(pi/2)]]
 
 Y_n = O*r_x*R;
 X_n = O*r_y*R;
@@ -60,13 +60,24 @@ Y_component = dot(Incoming,Y_n);
 I = [X_component Y_component];
 I = I/norm(I);
 
-theta = finalAngleStorage(6,1)
+theta = finalAngleStorage(8,1)
 R_o = [[cosd(theta) -sind(theta)];[sind(theta) cosd(theta)]];
 I = I*R_o;
 
 P = [I 0]
 P = P*R;
 P = P/norm(P);
+
+A = dot(Incoming,U)*U;
+C = Incoming-A;
+C = C/norm(C);
+C = C*inv(R);
+
+R_z = [[cosd(theta) -sind(theta) 0]; [sind(theta) cosd(theta) 0]; [0 0 1]];
+
+C = C*R_z;
+C = C*R;
+
 
 figure
 plot3([0 U(1)],[0 U(2)],[0 U(3)])
@@ -76,6 +87,7 @@ plot3([0 N(1)],[0 N(2)],[0 N(3)])
 plot3([0 F(1)],[0 F(2)],[0 F(3)])
 plot3([0 Incoming(1)],[0 Incoming(2)],[0 Incoming(3)])
 plot3([0 P(1)],[0 P(2)],[0 P(3)])
+plot3([0 C(1)],[0 C(2)],[0 C(3)],'--x')
 xlabel("x-axis")
 zlabel("z-axis")
 ylabel("y-label")
@@ -83,7 +95,7 @@ xlim([-1 1])
 ylim([-1 1])
 zlim([-1 1])
 
-figure
-plot([0 I(1)],[0 I(2)])
-xlim([-1 1])
-ylim([-1 1])
+% figure
+% plot([0 I(1)],[0 I(2)])
+% xlim([-1 1])
+% ylim([-1 1])
