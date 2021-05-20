@@ -1,4 +1,4 @@
-function [sensor_guess_set, error_optimization, finalDelay,  calculatedAngleStorage] = optimalisation_analytic(sources,readOut,receiver,d,STSS,t_array,medium_speed,x0,angleStorage)
+function [sensor_guess_set, error_optimization, finalDelay] = optimalisation_analytic(sources,readOut,receiver,d,STSS,t_array,medium_speed,x0,angleStorage)
 
 x_set = [];
 y_set = [];
@@ -52,13 +52,12 @@ for m = 1:length(sources)
     s = std(x)*10+0*y;
     f = x(find(x>s));
     c = findpeaks(f);
-    m = find(x==c(1));
-    steps = y(m);
+    k = find(x==c(1));
+    steps = y(k);
     finalDelay(m) = steps*t_array(2);
 end
 
-finalDelay = d_u;
-
+%finalDelay = d_u;
 %create offset
 
 %timeSyncOffset = 2.9e-4*rand(1) %2.9e-4 is the travel time of sound for 10 cm
@@ -71,29 +70,6 @@ sensor_guess_set = x;
 
 
 error_optimization = sqrt((sensor_guess_set(:,1)-receiver.arrayPattern(1,1)).^2+(sensor_guess_set(:,2)-receiver.arrayPattern(1,2)).^2+(sensor_guess_set(:,3)-receiver.arrayPattern(1,3)).^2);
-
-%caculate definitive angle
-calculatedAngleStorage = zeros(2,length(sources));
-for m = 1:length(sources)
-   vector = x' - sources(m).position;
-   if vector(1)>0 & vector(2)>0 
-   	inclinationOriginal = atand(vector(1)/vector(2));
-   end
-   if vector(1)<=0 & vector(2)>0
-    inclinationOriginal = 180-atand(vector(1)/vector(2));
-   end
-   if vector(1)<=0 & vector(2)<=0
-    inclinationOriginal = atand(vector(1)/vector(2))+180;
-   end
-   if vector(1)>0 & vector(2)<=0
-        inclinationOriginal = 360-atand(vector(1)/vector(2));
-   end
-   azimuthOriginal = atand(vector(3)/sqrt(vector(1)^2+vector(2)^2));
-   azimuthFinal = azimuthOriginal+angleStorage(1,m);
-   inclinationFinal = inclinationOriginal-angleStorage(2,m);
-   calculatedAngleStorage(1,m) = azimuthFinal';
-   calculatedAngleStorage(2,m) = inclinationFinal;
-end
 
 %scatter(sensor_guess_set(:,1),sensor_guess_set(:,2))
 end

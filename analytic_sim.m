@@ -8,11 +8,12 @@ f = 2e3:5:6e3;
 Ts = 8.3e-3;
 t_array = linspace(0,Ts,length(f));
 STSS = source_mag*sin(2*pi*f.*t_array);
+fc = round(1/t_array(2));
 
 %walls on stratum
 %up is x lower is y
-wallSet = [wall([15; 7],[0; 7]); wall([0; 0],[43; 0]); wall([19.5; 7],[43; 7]); wall([15; 7],[15; 32]); wall([19.5;7],[19.5; 32])];
-%wallSet = [];
+%wallSet = [wall([15; 7],[0; 7]); wall([0; 0],[43; 0]); wall([19.5; 7],[43; 7]); wall([15; 7],[15; 32]); wall([19.5;7],[19.5; 32])];
+wallSet = [];
 
 %set initial source
 %sources = [sourceClass([7;6;1],[]) sourceClass([8;4.5;1],[]) sourceClass([9;3;1],[]) sourceClass([10; 1.5; 1],[]) sourceClass([30; 5; 1],[]) sourceClass([30; 3; 1],[])] %original source
@@ -20,10 +21,11 @@ wallSet = [wall([15; 7],[0; 7]); wall([0; 0],[43; 0]); wall([19.5; 7],[43; 7]); 
 %coordinates = [[15 5 1];[15 3 1];[17 5 1];[17 3 1]]; %square E = 0.0343
 %coordinates = [[12 2 1];[16 2 1];[14 4 1]]; %triangle E = 11.2393
 %coordinates = [[12 2 1];[13 3 1];[14 4 1];[15 5 1]]; %diagonal E=12.3338
-coordinates = [[12 4 1];[14 4 1];[16 4 1];[14 6 1];[14 2 1]]; %cross E = 5.5465 | Eo = 0.0187 
+%coordinates = [[12 4 1];[14 4 1];[16 4 1];[14 6 1];[14 2 1]]; %cross E = 5.5465 | Eo = 0.0187 
 %coordinates = [[9 4 1];[11 4 1];[13 4 1];[11 6 1];[11 2 1];[13 4 1];[15 4 1];[17 4 1];[15 6 1];[15 2 1]]; %E=5.6978 | Eo=0.0152 
-d = 0.2;
-%coordinates = [[1.5 0.875 0.1];[1.5-d 0.875 0.1];[1.5+d 0.875 0.1];[1.5 0.875+d 0.1];[1.5 0.875-d 0.1]]; %zwarte doos simulations
+d = 2;
+s = 10;
+coordinates = [[s 0.875 0.1];[s-d 0.875 0.1];[s+d 0.875 0.1];[s 0.875+d 0.1];[s 0.875-d 0.1]]; %zwarte doos simulations
 sources = [];
 
 %coordinates(:,1) = coordinates(:,1);
@@ -39,12 +41,13 @@ load('data/sunFlowerArray.mat')
 % receiverClass([sunFlowerArray(:,1)+5 sunFlowerArray(:,2)+6 sunFlowerArray(:,3)+3])
 %coordinatesReceiver = [[2 6 3];[2 1 3];[10 6 3];[10 1 3];[18 6 3];[18 1 3];[26 6 3];[26 1 3];[34 6 3];[34 1 3]];
 %coordinatesReceiver = [[10 6 3];[10 1 3];[18 6 3];[18 1 3]];
-coordinatesReceiver = [[0.1 0.875 0.5 pi/4 pi/2]];
+coordinatesReceiver = [[0.1 0.875 1 deg2rad(90) pi/2]];
+%coordinatesReceiver = [[5 4 3 pi/4 pi/2]];
 
 receivers = [];
 
 x0 = mean([sources(:).position],2)';
-x0(3) = mean(coordinatesReceiver(:,2));
+x0(3) = mean(coordinatesReceiver(:,3));
 
 for i = 1:size(coordinatesReceiver,1)
     storageArray = zeros(size(sunFlowerArray));
@@ -52,11 +55,12 @@ for i = 1:size(coordinatesReceiver,1)
     azimuth = coordinatesReceiver(i,5);
     r_x = [[1 0 0];[0 cos(inclination) -sin(inclination)];[0 sin(inclination) cos(inclination)]];
     r_z = [[cos(azimuth) -sin(azimuth) 0]; [sin(azimuth) cos(azimuth) 0]; [0 0 1]];
-    directionVector = (r_z*r_x*[0; 1; 0])'
+    directionVector = (r_z*r_x*[0; 0; 1])';
+    orientationVector = (r_z*r_x*[-1; 0; 0])';
     for m = i:size(sunFlowerArray)
         storageArray(m,:) = (r_z*r_x*sunFlowerArray(m,:)')';
     end
-    receivers = [receivers receiverClass(storageArray+coordinatesReceiver(i,1:3),coordinatesReceiver(i,4),coordinatesReceiver(i,5),directionVector)];
+    receivers = [receivers receiverClass(storageArray+coordinatesReceiver(i,1:3),coordinatesReceiver(i,4),coordinatesReceiver(i,5),directionVector,orientationVector)];
 end
 
 %plot information
@@ -64,10 +68,10 @@ for receiver = receivers
     plot(receiver.arrayPattern(1,1),receiver.arrayPattern(1,2),'ob')
     hold all
 end
-xlim([-5 45])
-ylim([-5 35])
-%xlim([0 1.75])
-%ylim([0 1.75])
+%xlim([-5 45])
+%ylim([-5 35])
+xlim([0 15])
+ylim([0 1.75])
 xlabel("x [meters]")
 ylabel("y [meters]")
 title("simulation")
@@ -91,9 +95,9 @@ receiverReadOut = [];
 for receiver = receivers
     readOut = [];
     for i = 1:length(sources)
-        [results]  = createReflectionMap(sources(i), [wallSet(1) wallSet(2)]);
-        [results]  = createReflectionMap(results, [wallSet(1) wallSet(2)]);
-        %results = sources(i); %the above to comments and this line is to disable reflections
+        %[results]  = createReflectionMap(sources(i), [wallSet(1) wallSet(2)]);
+        %[results]  = createReflectionMap(results, [wallSet(1) wallSet(2)]);
+        results = sources(i); %the above to comments and this line is to disable reflections
         hold all
         for point = results
             plot(point.position(1),point.position(2),'xr')
@@ -110,10 +114,10 @@ finalAngleStorage = zeros(2*length(receivers),length(sources));
 guess_set = [];
 guess_error = [];
 delayStorage = zeros(length(receivers),length(sources));
-calculatedAngleStorage = zeros(2,length(receivers));
 finalDirectionVectorStorage = [];
 absoluteAngle = [];
 finalOrientationVector = [];
+
 for i = 1:length(receivers)
     display(["Calculating array " int2str(i) " of the total " int2str(length(receivers))])
     m = (i-1)*2+1;
@@ -122,20 +126,23 @@ for i = 1:length(receivers)
         angleStorage(2,:) = -angleStorage(2,:);
     end
     finalAngleStorage(m:m+1,:) = angleStorage;
-    [sensor_guess_set, error_optimization, finalDelay,  calculatedAngleStorage] = optimalisation_analytic(sources,receiverReadOut(i).data,receivers(i),d,STSS,t_array,medium_speed,x0,angleStorage);
+    [sensor_guess_set, error_optimization, finalDelay] = optimalisation_analytic(sources,receiverReadOut(i).data,receivers(i),d,STSS,t_array,medium_speed,x0,angleStorage);
     guess_set = [guess_set; sensor_guess_set];
     guess_error = [guess_error error_optimization];
-    calculatedAngleStorage(:,i) = mean(calculatedAngleStorage,2);
     delayStorage(i,:) = finalDelay;
-    [finalDirectionVector angles finalRotation] = angle_calculation_analytic(angleStorage,sources,guess_set(i,:));
-    finalDirectionVectorStorage = [finalDirectionVectorStorage; finalDirectionVector];
+    [DirectionVector angles finalRotation, angle_error] = angle_calculation_analytic(angleStorage,sources,guess_set(i,:),receivers(i));
+    finalDirectionVectorStorage = [finalDirectionVectorStorage; DirectionVector];
     absoluteAngle = [absoluteAngle; angles];
     finalOrientationVector = [finalOrientationVector; -finalRotation];
     scatter(sensor_guess_set(1),sensor_guess_set(2),'pr')
 end
 
+lengthVectorPlot = 0.2;
+
 for  i = 1:size(finalOrientationVector,1)
    receiverPos = receivers(i).arrayPattern(1,:)
+   finalOrientationVector(i,:) = finalOrientationVector(i,:)*lengthVectorPlot;
+   finalDirectionVectorStorage(i,:) = finalDirectionVectorStorage(i,:)*lengthVectorPlot;
    plot([receiverPos(1) receiverPos(1)+finalOrientationVector(i,1)],[receiverPos(2) receiverPos(2)+finalOrientationVector(i,2)],'g')
    hold all
    plot([receiverPos(1) receiverPos(1)+finalDirectionVectorStorage(i,1)],[receiverPos(2) receiverPos(2)+finalDirectionVectorStorage(i,2)],'m')
@@ -148,7 +155,7 @@ h(2) = plot(nan,nan,'xb', 'visible', 'off');
 h(3) = plot(nan,nan,'xr', 'visible', 'off');
 h(4) = plot(nan,nan,'pr', 'visible', 'off');
 h(5) = plot(nan,nan,'g', 'visible', 'off');
-h(6) = plot(nan,nan,'c', 'visible', 'off');
+h(6) = plot(nan,nan,'m', 'visible', 'off');
 legend(h, 'receiver','source','mirror source','estimated receiver','orientation vector','direction vector');
 
 
