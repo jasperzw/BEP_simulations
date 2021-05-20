@@ -8,22 +8,28 @@ for nmbSource = 1:length(sources)
 delayArray = zeros(1,length(sunFlowerArray));
 for i = 1:length(sunFlowerArray)
     [x y] = xcorr(readOut(i+(nmbSource-1)*length(sunFlowerArray),:),STSS);
-    index = find(y==0);
-    x = x(index:end);
-    [pks loc] = findpeaks(x);
-    highest = maxk(pks,4);
-    index = length(highest);
-    for f = 1:length(highest)
-    index(f) = find(x == highest(f),1);
-    end
+%     index = find(y==0);
+%     x = x(index:end);
+%     [pks loc] = findpeaks(x);
+%     highest = maxk(pks,1);
+%     index = length(highest);
 
-    steps = min(index);
-
+%     for f = 1:length(highest)
+%     index(f) = find(x == highest(f),1);
+%     end
+% 
+%     steps = min(index);
+    s = std(x)*10+0*y;
+    f = x(find(x>s));
+    c = findpeaks(f);
+    m = find(x==c(1));
+   steps = y(m);
    %steps = find(x>10^5);
    %steps = -y(steps(end));
    %steps = find(readOut(i+(nmbSource-1)*length(sunFlowerArray),:)>10,1);
    %steps = find(x>10^6,1)
    delayArray(i) = steps;
+
 end
 
 %delayArray = delayArray;

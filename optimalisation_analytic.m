@@ -12,7 +12,7 @@ for i = 1:length(sources)
     z_set = [z_set sources(i).position(3)];
 end
 
-sensor_set = []
+sensor_set = [];
 %x0 = [18,6,3];
 lb = [0,0,0];
 ub = [50,50,10];
@@ -39,16 +39,21 @@ finalDelay = zeros(1,length(sources));
 
 for m = 1:length(sources)
     [x y] = xcorr(finalReadOut(m,:),STSS);
-    index = find(y==0);
-    x = x(index:end);
-    [pks loc] = findpeaks(x);
-    highest = maxk(pks,4);
-    index = length(highest);
-    for f = 1:length(highest)
-    index(f) = find(x == highest(f),1);
-    end
-
-    steps = min(index);
+%     index = find(y==0);
+%     x = x(index:end);
+%     [pks loc] = findpeaks(x);
+%     highest = maxk(pks,1);
+%     index = length(highest);
+%     for f = 1:length(highest)
+%     index(f) = find(x == highest(f),1);
+%     end
+% 
+%     steps = min(index);
+    s = std(x)*10+0*y;
+    f = x(find(x>s));
+    c = findpeaks(f);
+    m = find(x==c(1));
+    steps = y(m);
     finalDelay(m) = steps*t_array(2);
 end
 
@@ -65,14 +70,14 @@ x = lsqnonlin(fun,x0,lb,ub,options);
 sensor_guess_set = x;
 
 
-error_optimization = sqrt((sensor_guess_set(:,1)-receiver.arrayPattern(1,1)).^2+(sensor_guess_set(:,2)-receiver.arrayPattern(1,2)).^2+(sensor_guess_set(:,3)-receiver.arrayPattern(1,3)).^2)
+error_optimization = sqrt((sensor_guess_set(:,1)-receiver.arrayPattern(1,1)).^2+(sensor_guess_set(:,2)-receiver.arrayPattern(1,2)).^2+(sensor_guess_set(:,3)-receiver.arrayPattern(1,3)).^2);
 
 %caculate definitive angle
 calculatedAngleStorage = zeros(2,length(sources));
 for m = 1:length(sources)
    vector = x' - sources(m).position;
    if vector(1)>0 & vector(2)>0 
-   	inclinationOriginal = atand(vector(1)/vector(2))
+   	inclinationOriginal = atand(vector(1)/vector(2));
    end
    if vector(1)<=0 & vector(2)>0
     inclinationOriginal = 180-atand(vector(1)/vector(2));

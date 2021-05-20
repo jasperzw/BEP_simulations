@@ -60,13 +60,13 @@ end
 % ylabel("y-axis")
 % zlabel("z-axis")
 
-directionVectorSet = []
+directionVectorSet = [];
 for p = 1:length(sources)
     for i = 1:length(sources)
         if i~=p
             distances = pdist2(squeeze(finalDirection(p,:,:)),squeeze(finalDirection(i,:,:)));
             minDistance = min(distances(:));
-            [rowOfA, rowOfB] = find(distances == minDistance);
+            [rowOfA, rowOfB] = find(distances == minDistance,1);
 
             directionVectorSet = [directionVectorSet; squeeze(finalDirection(i,rowOfB,:))'];
         end
@@ -75,16 +75,16 @@ end
 directionVectorSet = [directionVectorSet; squeeze(finalDirection(1,rowOfA,:))'];
 
 directionVectorSetNonOutlier = rmoutliers(directionVectorSet);
-finalDirectionVector = mean(directionVectorSetNonOutlier)*5
+finalDirectionVector = mean(directionVectorSetNonOutlier)*5;
 
 [inclination,elevation,r] = cart2sph(finalDirectionVector(1),finalDirectionVector(2),finalDirectionVector(3));
 inclination = rad2deg(inclination);
 elevation = rad2deg(elevation);
 angles = [inclination elevation];
 
-finalRotation = []
+finalRotation = [];
 for m = 1:length(sources)
-U = finalDirectionVector
+U = finalDirectionVector;
 Incoming = array_position-sources(m).position';
 U = U/norm(U);
 V = cross(U,[1 0 0]);
@@ -100,8 +100,8 @@ R = [W; V; U];
 
 O = U*inv(R);
 
-r_x = [[1 0 0];[0 cos(-pi/2) -sin(-pi/2)];[0 sin(-pi/2) cos(-pi/2)]]
-r_y = [[cos(-pi/2) 0 sin(-pi/2)];[0 1 0];[-sin(-pi/2) 0 cos(-pi/2)]]
+r_x = [[1 0 0];[0 cos(-pi/2) -sin(-pi/2)];[0 sin(-pi/2) cos(-pi/2)]];
+r_y = [[cos(-pi/2) 0 sin(-pi/2)];[0 1 0];[-sin(-pi/2) 0 cos(-pi/2)]];
 
 Y_n = O*r_x*R;
 X_n = O*r_y*R;
@@ -116,11 +116,11 @@ Y_component = dot(Incoming,Y_n);
 I = [X_component Y_component];
 I = I/norm(I);
 
-theta = finalAngleStorage(2,m)
+theta = finalAngleStorage(2,m);
 R_o = [[cosd(theta) -sind(theta)];[sind(theta) cosd(theta)]];
 I = I*R_o;
 
-P = [I 0]
+P = [I 0];
 P = P*R;
 P = P/norm(P);
 

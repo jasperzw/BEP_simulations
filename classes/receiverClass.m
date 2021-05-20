@@ -4,13 +4,19 @@ classdef receiverClass
     
     properties
         arrayPattern
+        inclination
+        azimuth
+        directionVector
     end
     
     methods
-        function obj = receiverClass(inputArg1)
+        function obj = receiverClass(microphonePosition,inclination,azimuth,directionVector)
             %RECEIVER Construct an instance of this class
             %   Detailed explanation goes here
-            obj.arrayPattern = inputArg1;
+            obj.arrayPattern = microphonePosition;
+            obj.inclination = inclination;
+            obj.azimuth = azimuth;
+            obj.directionVector = directionVector;
         end
     end
 end
