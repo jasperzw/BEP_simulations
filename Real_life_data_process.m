@@ -25,6 +25,8 @@ flightTime = distance/mediumSpeed;
 samplesTaken = flightTime*snd.fs
 sensivity = 4;
 
+ishMiddle = 26;
+
 [calibrationEmittence,fs] = audioread('../Measurements_Zwarte_doos/mychirp_single.wav');
 calibrationEmittence = resample(calibrationEmittence,snd.fs,fs);
 
@@ -66,13 +68,13 @@ snd = load_sound(filenames(m), 0, 10);
 [t_u_c d_c angleStorage_c errorStorage_c] = beamformer_real_life(sunFlowerPattern,1,snd.data(65:end,:),calibrationEmittence,sensivity-2,snd.fs);
 begin_t = mean(t_u_c(35:38));
 t = t_u-begin_t;
+d_res = d-d(ishMiddle);
 d = d-round(mean(d_c(35:38)));
-
 finalReadOut = zeros(1,length(snd.data(1,:)));
 %% apply delays as beamformer
 
 for i = 1:length(sunFlowerPattern)
-    finalReadOut = finalReadOut + shift(snd.data(i,:),-d(i));
+    finalReadOut = finalReadOut + shift(snd.data(i,:),-d_res(i));
 end
 
 
@@ -91,9 +93,11 @@ dTotal = [dTotal d];
 tTotal = [tTotal t];
 end
 
+t_set = (0:length(snd.data(37,:))-1)/snd.fs;
 
-t_array = [0 1/snd.fs]
-[sensor_guess_set, error_optimization, finalDelay] = optimalisation_real_life(sources,snd.data,receivers(1),tTotal,calibrationEmittence,t_array,mediumSpeed,x0,angleStorage)
+t_array = [0 1/snd.fs];
+[sensor_guess_set, error_optimization, finalDelay] = optimalisation_real_life(sources,snd.data,receivers(1),tTotal,calibrationEmittence,t_array,mediumSpeed,x0,angleStorage);
+error_optimization
 
 
 
