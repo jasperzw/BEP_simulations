@@ -1,4 +1,4 @@
-function [sensor_guess_set, error_optimization, finalDelay] = optimalisation_analytic(sources,readOut,receiver,d,STSS,t_array,medium_speed,x0,angleStorage)
+function [sensor_guess_set, error_optimization, finalDelay] = optimalisation_real_life(sources,readOut,receiver,d,STSS,t_array,medium_speed,x0,angleStorage)
 
 x_set = [];
 y_set = [];
@@ -25,29 +25,11 @@ d_u = d(1,:)*t_array(2);
 d = d-d(1,:);
 
 finalReadOut = zeros(length(sources),length(readOut));
-%% apply delays as beamformer
-for m = 1:length(sources)
-    for i = 1:length(sunFlowerArray)
-        finalReadOut(m,:) = finalReadOut(m,:) + shift(readOut(i+(m-1)*length(sunFlowerArray),:),-d(i,m));
-    end
-    % apply bandpass filter
-    %finalReadOut(m,:) = bandpass(finalReadOut(m,:),[1e3 7e3],1/t_array(2));
-end
+
 
 %% calculate final delay
-finalDelay = zeros(1,length(sources));
 
-for m = 1:length(sources)
-    [x y] = xcorr(finalReadOut(m,:),STSS);
-    s = std(x)*10+0*y;
-    f = x(find(x>s));
-    c = findpeaks(f);
-    k = find(x==c(1));
-    steps = y(k);
-    finalDelay(m) = steps*t_array(2);
-end
-
-%finalDelay = d_u;
+finalDelay = d_u;
 %create offset
 
 %timeSyncOffset = 2.9e-4*rand(1) %2.9e-4 is the travel time of sound for 10 cm

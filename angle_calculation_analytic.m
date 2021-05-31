@@ -1,12 +1,12 @@
 function [finalDirectionVector angles finalRotation, angle_error] = angle_calculation_analytic(finalAngleStorage,sources,array_position,receiver)
 
-Roll = 0:2:359;
+Roll = 0:5:359;
 dis = 0.3;
 color = ['r','m','c','y','g'];
 
 finalDirection = zeros(length(sources),length(Roll),3);
 
-%figure
+figure
 
 for m = 1:length(sources)
 U = array_position-sources(m).position';
@@ -39,30 +39,30 @@ end
 finalDirection(m,:,:) = direction;
 
 
-% plot3([0 U(1)],[0 U(2)],[0 U(3)],'r')
+plot3([0 U(1)],[0 U(2)],[0 U(3)],'r')
+hold all
+plot3([0 V(1)],[0 V(2)],[0 V(3)],'b')
+hold all
+plot3([0 W(1)],[0 W(2)],[0 W(3)],'b')
 % hold all
-% plot3([0 V(1)],[0 V(2)],[0 V(3)],'b')
+% plot3([0 test(1)],[0 test(2)],[0 test(3)],'y')
 % hold all
-% plot3([0 W(1)],[0 W(2)],[0 W(3)],'b')
-% % hold all
-% % plot3([0 test(1)],[0 test(2)],[0 test(3)],'y')
-% % hold all
-% % plot3([0 testRotated(1)],[0 testRotated(2)],[0 testRotated(3)],'c')
-% hold all
-% 
-% for i = 1:length(Roll)
-% plot3([0 direction(i,1)],[0 direction(i,2)],[0 direction(i,3)],color(m))
-% hold all
-% end
+% plot3([0 testRotated(1)],[0 testRotated(2)],[0 testRotated(3)],'c')
+hold all
+
+for i = 1:length(Roll)
+plot3([0 direction(i,1)],[0 direction(i,2)],[0 direction(i,3)],color(m))
+hold all
+end
 
 end
-% plot3([0 answer(1)],[0 answer(2)],[0 answer(3)],'m')
-% zlim([-1 1])
-% ylim([-1 1])
-% xlim([-1 1])
-% xlabel("x-axis")
-% ylabel("y-axis")
-% zlabel("z-axis")
+plot3([0 answer(1)],[0 answer(2)],[0 answer(3)],'m')
+zlim([-1 1])
+ylim([-1 1])
+xlim([-1 1])
+xlabel("x-axis")
+ylabel("y-axis")
+zlabel("z-axis")
 
 
 directionVectorSet = [];
@@ -156,7 +156,7 @@ v = receiver.orientationVector;
 angle_error = [angle_error atan2(norm(cross(u,v)),dot(u,v))];
 
 
-%plot3([0 finalDirectionVector(1)],[0 finalDirectionVector(2)],[0 finalDirectionVector(3)],'g')
+plot3([0 finalDirectionVector(1)],[0 finalDirectionVector(2)],[0 finalDirectionVector(3)],'g')
 
 %error("stop for graphing")
 

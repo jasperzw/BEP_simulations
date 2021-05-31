@@ -41,7 +41,7 @@ load('data/sunFlowerArray.mat')
 % receiverClass([sunFlowerArray(:,1)+5 sunFlowerArray(:,2)+6 sunFlowerArray(:,3)+3])
 %coordinatesReceiver = [[2 6 3];[2 1 3];[10 6 3];[10 1 3];[18 6 3];[18 1 3];[26 6 3];[26 1 3];[34 6 3];[34 1 3]];
 %coordinatesReceiver = [[10 6 3];[10 1 3];[18 6 3];[18 1 3]];
-coordinatesReceiver = [[0.1 0.875 1 deg2rad(90) pi/2]];
+coordinatesReceiver = [[0.1 0.875 1 deg2rad(45) pi/2]];
 %coordinatesReceiver = [[5 4 3 pi/4 pi/2]];
 
 receivers = [];
@@ -71,7 +71,7 @@ end
 %xlim([-5 45])
 %ylim([-5 35])
 xlim([0 15])
-ylim([0 1.75])
+ylim([-2 2])
 xlabel("x [meters]")
 ylabel("y [meters]")
 title("simulation")
