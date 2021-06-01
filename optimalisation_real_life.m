@@ -15,21 +15,20 @@ end
 sensor_set = [];
 %x0 = [18,6,3];
 lb = [0,0,0];
-ub = [50,50,10];
+ub = [3,3,2];
 options = optimoptions('lsqnonlin','Display','off');
 options.OptimalityTolerance = 1e-20;
 options.FunctionTolerance = 1e-20;
 options.StepTolerance = 1e-10;
 sensor_guess_set = [];
-d_u = d(1,:)*t_array(2);
-d = d-d(1,:);
+
 
 finalReadOut = zeros(length(sources),length(readOut));
 
 
 %% calculate final delay
 
-finalDelay = d_u;
+finalDelay = d;
 %create offset
 
 %timeSyncOffset = 2.9e-4*rand(1) %2.9e-4 is the travel time of sound for 10 cm
