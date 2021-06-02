@@ -98,15 +98,20 @@ for i = 1:length(sunFlowerPattern)
 end
 
 %% get final delay
-[x y] = xcorr(finalReadOut,calibrationEmittence);
+[x y] = xcorr(finalReadOut,snd.data(64+24+4,:));
 pos = find(y>=0,1);
 x = x(pos:end);
-s = std(x)*sensivity;
-f = x(find(x>s));
-c = findpeaks(f);
-k = find(x==c(1));
 
-beamformerDelay = k/snd.fs-begin_t;
+index = find(x==max(x));
+k = index;
+% pos = find(y>=0,1);
+% x = x(pos:end);
+% s = std(x)*sensivity;
+% f = x(find(x>s));
+% c = findpeaks(f);
+% k = find(x==c(1));
+
+beamformerDelay = k/snd.fs;
 
 % apply bandpass filter
 %finalReadOut(m,:) = bandpass(finalReadOut(m,:),[1e3 7e3],1/t_array(2));
