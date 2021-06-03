@@ -93,11 +93,51 @@ end
 
 if set == 2
     switch index
-        case 1
+        case 1 % calibration
         MeasureSet = [132 130 128 129 131];
         sources = [sourceClass([2 1.4 0],[]); sourceClass([2.3 1.4 0],[]); sourceClass([2.6 1.4 0],[]); sourceClass([2.3 1.1 0],[]); sourceClass([2.3 1.7 0],[])];  %sources close
+        sensivity = 4.3;
+        coordinatesReceiver = [[1 1.4 1.05 deg2rad(0) deg2rad(90)]];
+        nArray = 3;
+        
+        case 2 % 5 meter
+        MeasureSet = [88 86 98 85 87];
+        d = 5;
+        sources = [sourceClass([d-2 2 0],[]); sourceClass([d 2 0],[]); sourceClass([d+2 2 0],[]); sourceClass([d 0 0],[]); sourceClass([d 4 0],[])];  %sources close
         sensivity = 2;
-        coordinatesReceiver = [[1 1.4 1.5 deg2rad(0) deg2rad(90)]];
+        coordinatesReceiver = [[0 -0.65+2 1.05 deg2rad(0) deg2rad(90)]];
+        nArray = 3;
+
+        case 3 % 6 meter
+        MeasureSet = [83 95 101 94 96];
+        d = 6;
+        sources = [sourceClass([d-2 2 0],[]); sourceClass([d 2 0],[]); sourceClass([d+2 2 0],[]); sourceClass([d 0 0],[]); sourceClass([d 4 0],[])];  %sources close
+        sensivity = 2;
+        coordinatesReceiver = [[0 -0.65+2 1.05 deg2rad(0) deg2rad(90)]];
+        nArray = 3;
+        
+        case 4 % 7 meter
+        MeasureSet = [86 98 109 97 99];
+        d = 7;
+        sources = [sourceClass([d-2 2 0],[]); sourceClass([d 2 0],[]); sourceClass([d+2 2 0],[]); sourceClass([d 0 0],[]); sourceClass([d 4 0],[])];  %sources close
+        sensivity = 2;
+        coordinatesReceiver = [[0 -0.65+2 1.05 deg2rad(0) deg2rad(90)]];
+        nArray = 3;
+        
+        case 5 % 8 meter
+        MeasureSet = [95 101 77 100 102];
+        d = 8;
+        sources = [sourceClass([d-2 2 0],[]); sourceClass([d 2 0],[]); sourceClass([d+2 2 0],[]); sourceClass([d 0 0],[]); sourceClass([d 4 0],[])];  %sources close
+        sensivity = 2;
+        coordinatesReceiver = [[0 -0.65+2 1.05 deg2rad(0) deg2rad(90)]];
+        nArray = 3;
+        
+        case 6 % 9 meter
+        MeasureSet = [98 109 76 108 110];
+        d = 9;
+        sources = [sourceClass([d-2 2 0],[]); sourceClass([d 2 0],[]); sourceClass([d+1.4 2 0],[]); sourceClass([d 0 0],[]); sourceClass([d 4 0],[])];  %sources close
+        sensivity = 2.8;
+        coordinatesReceiver = [[0 -0.65+2 1.05 deg2rad(0) deg2rad(90)]];
         nArray = 3;
     end
 end
