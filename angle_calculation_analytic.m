@@ -1,6 +1,6 @@
 function [finalDirectionVector angles finalRotation, angle_error] = angle_calculation_analytic(finalAngleStorage,sources,array_position,receiver)
 
-Roll = 0:5:359;
+Roll = 0:2:359;
 dis = 0.3;
 color = ['r','m','c','y','g'];
 
