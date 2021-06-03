@@ -22,8 +22,8 @@ filenames = fullfile(folders(idx), names(idx));
 
 
 %% assignen which files to be used
-dataSet = 1;
-measureFile = 2;
+dataSet = 2;
+measureFile = 3;
 
 if dataSet==1
 sunFlowerPattern = sunflower_map();
@@ -192,7 +192,8 @@ end
 
 t_set = (0:length(snd.data(37,:))-1)/snd.fs;
 
-%tTotal(5) = 0.023;
+%tTotal(3) = 0.0235;
+%tTotal(5) = 0.0192725364197441;
 
 t_array = [0 1/snd.fs];
 [sensor_guess_set, error_optimization, finalDelay] = optimalisation_real_life(sources,snd.data,receivers(1),tTotal,calibrationEmittence,t_array,mediumSpeed,x0,angleStorage);

@@ -9,7 +9,7 @@ delayArray = zeros(1,length(sunFlowerArray));
 for i = 1:length(sunFlowerArray) 
     
     filtered = readOut(i+(nmbSource-1)*length(sunFlowerArray),:);
-    %filtered = bandpass(readOut(i+(nmbSource-1)*length(sunFlowerArray),:),[2.5e3 6.5e3],fs);
+    %filtered = bandpass(filtered,[2.5e3 6.5e3],fs);
     [x y] = xcorr(filtered,STSS);
     pos = find(y>=0,1);
 	x = x(pos:end);

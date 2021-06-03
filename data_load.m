@@ -104,7 +104,7 @@ if set == 2
         MeasureSet = [88 86 98 85 87];
         d = 5;
         sources = [sourceClass([d-2 2 0],[]); sourceClass([d 2 0],[]); sourceClass([d+2 2 0],[]); sourceClass([d 0 0],[]); sourceClass([d 4 0],[])];  %sources close
-        sensivity = 2;
+        sensivity = 2.5;
         coordinatesReceiver = [[0 -0.65+2 1.05 deg2rad(0) deg2rad(90)]];
         nArray = 3;
 
@@ -112,7 +112,7 @@ if set == 2
         MeasureSet = [83 95 101 94 96];
         d = 6;
         sources = [sourceClass([d-2 2 0],[]); sourceClass([d 2 0],[]); sourceClass([d+2 2 0],[]); sourceClass([d 0 0],[]); sourceClass([d 4 0],[])];  %sources close
-        sensivity = 2;
+        sensivity = 2.2;
         coordinatesReceiver = [[0 -0.65+2 1.05 deg2rad(0) deg2rad(90)]];
         nArray = 3;
         
