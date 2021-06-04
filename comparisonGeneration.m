@@ -4,8 +4,11 @@ inclinationSet = linspace(0,pi*2,500);
 r = 1;
 medium_speed = (343.21+346.13)/2;
 
-sunFlowerArray = sunflower_map();
-sunFlowerArray = [sunFlowerArray(:,3:4)/1000 zeros(length(sunFlowerArray),1)]
+% sunFlowerArray = sunflower_map();
+% sunFlowerArray = [sunFlowerArray(:,3:4)/1000 zeros(length(sunFlowerArray),1)]
+
+load 'data/squareGrid.mat';
+sunFlowerArray = [squareGrid zeros(length(squareGrid),1)];
 
 resultStorage = [];
 
@@ -28,4 +31,4 @@ for inclination = inclinationSet
    resultStorage = [resultStorage; azimuthStorage];
 end
 
-save("data/comparisonCam64Sun.mat","resultStorage","azimuthSet","inclinationSet")
+save("data/comparisonSquareGrid.mat","resultStorage","azimuthSet","inclinationSet")

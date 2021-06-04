@@ -14,8 +14,8 @@ end
 
 sensor_set = [];
 %x0 = [18,6,3];
-lb = [0,0,0];
-ub = [3,3,2];
+lb = [-1,-5,0];
+ub = [12,5,2];
 options = optimoptions('lsqnonlin','Display','off');
 options.OptimalityTolerance = 1e-20;
 options.FunctionTolerance = 1e-20;

@@ -7,7 +7,10 @@ d = zeros(length(sunFlowerArray),length(sources));
 for nmbSource = 1:length(sources)
 delayArray = zeros(1,length(sunFlowerArray));
 for i = 1:length(sunFlowerArray) 
-    [x y] = xcorr(readOut(i+(nmbSource-1)*length(sunFlowerArray),:),STSS);
+    
+    filtered = readOut(i+(nmbSource-1)*length(sunFlowerArray),:);
+    %filtered = bandpass(filtered,[2.5e3 6.5e3],fs);
+    [x y] = xcorr(filtered,STSS);
     pos = find(y>=0,1);
 	x = x(pos:end);
     s = std(x)*sensivity;
