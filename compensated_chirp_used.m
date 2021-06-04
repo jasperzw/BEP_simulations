@@ -1,8 +1,8 @@
 % Create a chirp with compensation for the Fresnel ringing
-filename = 'mychirp.wav'; % Filename to write to
+filename = 'mychirp_test.wav'; % Filename to write to
 fs = 48e3; % Sample frequency [Hz]
 T = 50e-3; % Duration of chirp [s]
-Twav = 60; % Duration of .wav [s]
+Twav = 1; % Duration of .wav [s]
 fend = 6500; % Highest frequency of chirp [Hz]
 
 ts = 1 / fs;

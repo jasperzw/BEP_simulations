@@ -1,4 +1,7 @@
-Y = fft(filtered);
+signal = x
+
+
+Y = fft(signal);
 L = length(Y);
 Fs = snd.fs
 P2 = abs(Y/L);

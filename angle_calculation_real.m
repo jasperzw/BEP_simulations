@@ -1,6 +1,6 @@
 function [finalDirectionVector angles finalRotation, angle_error] = angle_calculation_real(finalAngleStorage,sources,array_position,receiver)
 
-Roll = 0:6:359;
+Roll = 0:1:359;
 dis = 0.3;
 color = ['r','m','c','y','g'];
 
@@ -65,22 +65,36 @@ ylabel("y-axis")
 zlabel("z-axis")
 
 
-directionVectorSet = [];
-for p = 1:length(sources)
-    for i = 1:length(sources)
-        if i~=p
-            distances = pdist2(squeeze(finalDirection(p,:,:)),squeeze(finalDirection(i,:,:)));
-            minDistance = min(distances(:));
-            [rowOfA, rowOfB] = find(distances == minDistance,1);
+% directionVectorSet = [];
+% % for p = 1:length(sources)
+% %     for i = 1:length(sources)
+% %         if i~=p
+% %             distances = pdist2(squeeze(finalDirection(p,:,:)),squeeze(finalDirection(i,:,:)));
+% %             minDistance = min(distances(:));
+% %             [rowOfA, rowOfB] = find(distances == minDistance,1);
+% % 
+% %             directionVectorSet = [directionVectorSet; squeeze(finalDirection(i,rowOfB,:))'];
+% %         end
+% %     end
+% % end
+% directionVectorSet = [directionVectorSet; squeeze(finalDirection(1,rowOfA,:))'];
+SetA = ones(size(squeeze(finalDirection(1,:,:))));
+SetA(:,1) = SetA(:,1)*answer(1);
+SetA(:,2) = SetA(:,2)*answer(2);
+SetA(:,3) = SetA(:,3)*answer(3);
 
-            directionVectorSet = [directionVectorSet; squeeze(finalDirection(i,rowOfB,:))'];
-        end
-    end
+stor = []
+for p = 1:5
+    temp = squeeze(finalDirection(p,:,:))-SetA;
+    temp = sqrt(sum((temp.^2),2));
+    index = find(temp == min(temp));
+    finalDirectionVector = squeeze(finalDirection(p,index,:));
+    stor = [stor finalDirectionVector];
 end
-directionVectorSet = [directionVectorSet; squeeze(finalDirection(1,rowOfA,:))'];
+finalDirectionVector = -mean(stor,2)'*100;
 
-directionVectorSetNonOutlier = rmoutliers(directionVectorSet);
-finalDirectionVector = -mean(directionVectorSetNonOutlier)*5;
+%directionVectorSetNonOutlier = stor'%rmoutliers(directionVectorSet);%directionVectorSet;%rmoutliers(directionVectorSet);
+%finalDirectionVector = stor'%-mean(directionVectorSetNonOutlier)*5;
 
 [inclination,elevation,r] = cart2sph(finalDirectionVector(1),finalDirectionVector(2),finalDirectionVector(3));
 inclination = rad2deg(inclination);

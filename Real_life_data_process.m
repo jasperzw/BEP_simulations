@@ -15,7 +15,7 @@ names = string({files.name filesKelder.name});
 idx = 1:length(idx);
 filenames = fullfile(folders(idx), names(idx));
 
-[calibrationEmittence,fs] = audioread('../Measurements_Zwarte_doos/mychirp_single.wav');
+[calibrationEmittence,fs] = audioread('mychirp_test.wav');
 
 %get the sun flower formation
 
@@ -23,7 +23,7 @@ filenames = fullfile(folders(idx), names(idx));
 
 %% assignen which files to be used
 dataSet = 2;
-measureFile = 3;
+measureFile = 2;
 
 if dataSet==1
 sunFlowerPattern = sunflower_map();
@@ -128,6 +128,7 @@ end
 %finalCal = snd.data(24+4+64*dataSet,:);
 finalReadOut = bandpass(finalReadOut,[1e3 10e3],snd.fs);
 finalCal = bandpass(finalCal,[1e3 10e3],snd.fs);
+
 %% get final delay
 %[x y] = xcorr(finalReadOut,snd.data(64+24+4,:));
 [x y] = xcorr(finalReadOut,finalCal);
@@ -167,8 +168,11 @@ end
 
 %% perform optimisation for result
 
-
+if dataSet == 2
 load data/comparisonSquareGrid.mat;
+else
+load data/comparisonCam64Sun.mat;
+end
 
 errorStorage = zeros(size(resultStorage));
 
@@ -192,8 +196,10 @@ end
 
 t_set = (0:length(snd.data(37,:))-1)/snd.fs;
 
-%tTotal(3) = 0.0235;
+%tTotal(3) = 0.02;
 %tTotal(5) = 0.0192725364197441;
+%tTotal = [0.0092    0.0145    0.026    0.0152    0.0167];
+%tTotal = flightTime;
 
 t_array = [0 1/snd.fs];
 [sensor_guess_set, error_optimization, finalDelay] = optimalisation_real_life(sources,snd.data,receivers(1),tTotal,calibrationEmittence,t_array,mediumSpeed,x0,angleStorage);
@@ -247,7 +253,7 @@ xlim([-2 10])
 ylim([-2 5])
 xlabel("x [meters]")
 ylabel("y [meters]")
-title("simulation")
+title("Zwarte Doos - far cross formation")
 %% short shift function to perform beamforming
 function [result] = shift(signal,amount)
 result = zeros(1,length(signal));

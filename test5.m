@@ -1,4 +1,4 @@
-plotFile = 1;
+plotFile = 3;
 subplot(5,1,1)
 [x y] = xcorr(finalStore(plotFile,:),calStore(plotFile,:));
 y = y/snd.fs;

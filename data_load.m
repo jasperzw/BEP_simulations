@@ -56,19 +56,19 @@ switch index
     case 9 %15 azimuth
         MeasureSet = [34 36 33 35 37];
         sources = [sourceClass([2 1.4 0],[]); sourceClass([2.3 1.4 0],[]); sourceClass([2.6 1.4 0],[]); sourceClass([2.3 1.1 0],[]); sourceClass([2.3 1.7 0],[])];  %sources close
-        sensivity = 4.5;
+        sensivity = 3;
         coordinatesReceiver = [[1 1.4 1.5 deg2rad(0) deg2rad(-15+90)]];
         
     case 10 %30 azimuth data seems a bit strange possibily broken
         MeasureSet = [40 42 39 41 43];
         sources = [sourceClass([2 1.4 0],[]); sourceClass([2.3 1.4 0],[]); sourceClass([2.6 1.4 0],[]); sourceClass([2.3 1.1 0],[]); sourceClass([2.3 1.7 0],[])];  %sources close
-        sensivity = 5;
+        sensivity = 3;
         coordinatesReceiver = [[1 1.4 1.5 deg2rad(0) deg2rad(-30+90)]];
         
     case 11 %45 azimuth
         MeasureSet = [45 47 44 46 48];
         sources = [sourceClass([2 1.4 0],[]); sourceClass([2.3 1.4 0],[]); sourceClass([2.6 1.4 0],[]); sourceClass([2.3 1.1 0],[]); sourceClass([2.3 1.7 0],[])];  %sources close
-        sensivity = 3.6;
+        sensivity = 3;
         coordinatesReceiver = [[1 1.4 1.5 deg2rad(0) deg2rad(-45+90)]];
         
     case 12 %60 azimuth
@@ -104,7 +104,7 @@ if set == 2
         MeasureSet = [88 86 98 85 87];
         d = 5;
         sources = [sourceClass([d-2 2 0],[]); sourceClass([d 2 0],[]); sourceClass([d+2 2 0],[]); sourceClass([d 0 0],[]); sourceClass([d 4 0],[])];  %sources close
-        sensivity = 2.5;
+        sensivity = 2;
         coordinatesReceiver = [[0 -0.65+2 1.05 deg2rad(0) deg2rad(90)]];
         nArray = 3;
 
@@ -120,7 +120,7 @@ if set == 2
         MeasureSet = [86 98 109 97 99];
         d = 7;
         sources = [sourceClass([d-2 2 0],[]); sourceClass([d 2 0],[]); sourceClass([d+2 2 0],[]); sourceClass([d 0 0],[]); sourceClass([d 4 0],[])];  %sources close
-        sensivity = 2;
+        sensivity = 2.3;
         coordinatesReceiver = [[0 -0.65+2 1.05 deg2rad(0) deg2rad(90)]];
         nArray = 3;
         
@@ -132,11 +132,19 @@ if set == 2
         coordinatesReceiver = [[0 -0.65+2 1.05 deg2rad(0) deg2rad(90)]];
         nArray = 3;
         
-        case 6 % 9 meter
+        case 7 % 30 graden meter
+        MeasureSet = [82 80 78 79 81];
+        d = 8;
+        sources = [sourceClass([d-2 2 0],[]); sourceClass([d 2 0],[]); sourceClass([d+1.4 2 0],[]); sourceClass([d 0 0],[]); sourceClass([d 4 0],[])];  %sources close
+        sensivity = 2.3;
+        coordinatesReceiver = [[0 -0.65+2 1.05 deg2rad(30) deg2rad(90)]];
+        nArray = 3;
+        
+         case 6 % 9 meter
         MeasureSet = [98 109 76 108 110];
         d = 9;
         sources = [sourceClass([d-2 2 0],[]); sourceClass([d 2 0],[]); sourceClass([d+1.4 2 0],[]); sourceClass([d 0 0],[]); sourceClass([d 4 0],[])];  %sources close
-        sensivity = 2.8;
+        sensivity = 2.3;
         coordinatesReceiver = [[0 -0.65+2 1.05 deg2rad(0) deg2rad(90)]];
         nArray = 3;
     end
