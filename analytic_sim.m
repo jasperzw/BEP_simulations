@@ -23,9 +23,9 @@ wallSet = [];
 %coordinates = [[12 2 1];[13 3 1];[14 4 1];[15 5 1]]; %diagonal E=12.3338
 %coordinates = [[12 4 1];[14 4 1];[16 4 1];[14 6 1];[14 2 1]]; %cross E = 5.5465 | Eo = 0.0187 
 %coordinates = [[9 4 1];[11 4 1];[13 4 1];[11 6 1];[11 2 1];[13 4 1];[15 4 1];[17 4 1];[15 6 1];[15 2 1]]; %E=5.6978 | Eo=0.0152 
-d = 2;
-s = 10;
-coordinates = [[s 0.875 0.1];[s-d 0.875 0.1];[s+d 0.875 0.1];[s 0.875+d 0.1];[s 0.875-d 0.1]]; %zwarte doos simulations
+d = 0.3;
+s = 2.3;
+coordinates = [[s 1.4 0];[s-d 1.4 0];[s+d 1.4 0];[s 1.4+d 0];[s 01.4-d 0]]; %zwarte doos simulations
 sources = [];
 
 %coordinates(:,1) = coordinates(:,1);
@@ -41,7 +41,7 @@ load('data/sunFlowerArray.mat')
 % receiverClass([sunFlowerArray(:,1)+5 sunFlowerArray(:,2)+6 sunFlowerArray(:,3)+3])
 %coordinatesReceiver = [[2 6 3];[2 1 3];[10 6 3];[10 1 3];[18 6 3];[18 1 3];[26 6 3];[26 1 3];[34 6 3];[34 1 3]];
 %coordinatesReceiver = [[10 6 3];[10 1 3];[18 6 3];[18 1 3]];
-coordinatesReceiver = [[0.1 0.875 1 deg2rad(45) pi/2]];
+coordinatesReceiver = [[1 1.4 1.5 deg2rad(15) pi/2]];
 %coordinatesReceiver = [[5 4 3 pi/4 pi/2]];
 
 receivers = [];
